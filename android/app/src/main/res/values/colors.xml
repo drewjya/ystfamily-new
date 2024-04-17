@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#CC0001</color>
+    <color name="ttlColorPrimary">@color/colorPrimary</color>
+    <color name="ttlColorPrimaryDark">@color/colorPrimary</color>
+    <color name="ttlColorPrimaryLight">@color/colorPrimary</color>
+</resources>

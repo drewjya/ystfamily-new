@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "337493064108",
+    "project_id": "ystfamily-prod",
+    "storage_bucket": "ystfamily-prod.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337493064108:android:52bcf7a872e42385fc6209",
+        "android_client_info": {
+          "package_name": "com.kodewizzard.ystfamily"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfFqYNa8KddqKAw7n9bP4HLB_Hb4tciuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337493064108:android:1b2ed7bf318d42edfc6209",
+        "android_client_info": {
+          "package_name": "com.kodewizzard.ystfamily.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfFqYNa8KddqKAw7n9bP4HLB_Hb4tciuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
