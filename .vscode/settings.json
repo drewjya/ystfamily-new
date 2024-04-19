@@ -11,5 +11,7 @@
         "**/.settings": true,
         "**/.factorypath": true
     },
-    "hide-files.files": []
+    "hide-files.files": [],
+    "dart.flutterSdkPath": "/Users/developersahamrakyat/.puro/envs/andre/flutter",
+    "dart.sdkPath": "/Users/developersahamrakyat/.puro/envs/andre/flutter/bin/cache/dart-sdk"
 }
