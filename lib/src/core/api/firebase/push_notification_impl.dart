@@ -13,7 +13,7 @@ import 'package:ystfamily/src/core/core.dart';
 
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {
-  log("MEssage Here $message");
+  log("[DEBUG]: [firebaseMessaging] -> $message ${message.data} msg from ${message.from}");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var localNotificationPlugin = FlutterLocalNotificationsPlugin();
   if (sl.isRegistered<FlutterLocalNotificationsPlugin>()) {
@@ -252,7 +252,7 @@ class IPushNotification implements PushNotification {
         log("[DEBUG]: [firebaseMessaging] -> FCM_TOKEN $fcmToken");
       });
       FirebaseMessaging.onMessage.listen((message) async {
-        log("firebase on message $message ${message.data} msg from ${message.from}");
+        log("[DEBUG]: [firebaseMessaging] -> $message ${message.data} msg from ${message.from}");
         await onReceivePushNotification(
             message: message, isFromBackground: isFromBackground);
       });
