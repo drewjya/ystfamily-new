@@ -59,7 +59,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: "YST Family",
+      title: "YST Family [Dev]",
       scaffoldMessengerKey: snackbarKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: VColor.primaryBackground),
