@@ -63,13 +63,13 @@ class CabangSection extends ConsumerWidget {
                   },
                   data: (data) {
                     return data
+                        .take(3)
                         .mapIndexed(
                           (index, e) => CabangCard(
                             cabang: e,
                             start: index != 2,
-                            onTap: () {
-                              OrderRoute(tipe: "all", branch: e.nama).push(context);
-                            },
+                            onTap: (cabang) =>
+                                OrderRoute(branch: cabang.nama).push(context),
                           ),
                         )
                         .toList();

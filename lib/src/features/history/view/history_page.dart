@@ -3,7 +3,8 @@ import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/provider/history_provider.dart';
 import 'package:ystfamily/src/features/history/widgets/history_card.dart';
 
-final formatCurrency = NumberFormat.simpleCurrency(locale: "id_ID", decimalDigits: 0);
+final formatCurrency =
+    NumberFormat.simpleCurrency(locale: "id_ID", decimalDigits: 0);
 
 class HistoryPage extends HookConsumerWidget {
   const HistoryPage({
@@ -20,7 +21,8 @@ class HistoryPage extends HookConsumerWidget {
               SizedBox(
                 height: 80,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: ListView.separated(
                     separatorBuilder: (context, index) {
                       return const SizedBox(
@@ -32,10 +34,13 @@ class HistoryPage extends HookConsumerWidget {
                       return ChoiceChip(
                         label: Text(e.name),
                         selected: ref.watch(filterProvider).filter == e,
-                        onSelected: ref.watch(historyProvider.select((value) => value.isLoading))
+                        onSelected: ref.watch(historyProvider
+                                .select((value) => value.isLoading))
                             ? null
                             : (value) {
-                                ref.read(filterProvider.notifier).changeFilter(filter: e);
+                                ref
+                                    .read(filterProvider.notifier)
+                                    .changeFilter(filter: e);
                               },
                       );
                     },
@@ -54,7 +59,9 @@ class HistoryPage extends HookConsumerWidget {
                     }
                     return ListView.separated(
                       itemCount: data.length + 1,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16).copyWith(top: 4),
+                      padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16)
+                          .copyWith(top: 4),
                       separatorBuilder: (context, index) {
                         return const SizedBox(
                           height: 16,
@@ -74,7 +81,8 @@ class HistoryPage extends HookConsumerWidget {
                             //   RescheduleOrderRoute(id: data[index].orderId).push(context);
                             //   return;
                             // }
-                            DetailHistoryRoute(id: data[index].orderId).push(context);
+                            DetailHistoryRoute(id: data[index].orderId)
+                                .push(context);
                           },
                         );
                       },
@@ -90,16 +98,6 @@ class HistoryPage extends HookConsumerWidget {
               ),
             ],
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          const OrderRoute(
-            tipe: "all",
-          ).push(context);
-        },
-        child: const Icon(
-          Icons.add,
-        ),
-      ),
     );
   }
 }

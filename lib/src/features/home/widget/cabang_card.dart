@@ -1,27 +1,39 @@
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/cabang/cabang.dart';
+import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 import 'package:ystfamily/src/features/profile/view/edit_profile_screen.dart';
 
-class CabangCard extends StatelessWidget {
+class CabangCard extends ConsumerWidget {
   final bool start;
   final Cabang cabang;
-  final VoidCallback? onTap;
+  final bool isSelected;
+  final void Function(Cabang cabang)? onTap;
   const CabangCard({
     Key? key,
     this.onTap,
     required this.start,
     required this.cabang,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Padding(
       padding: EdgeInsets.only(
         bottom: start ? 12 : 0,
       ),
       child: VCard.horizontal(
-        onTap: onTap,
-        backgroundColor: VColor.appbarBackground.withOpacity(0.7),
+        onTap: onTap != null
+            ? () {
+                ref
+                    .read(selectedCabangProvider.notifier)
+                    .update((state) => state = cabang);
+                onTap?.call(cabang);
+              }
+            : null,
+        backgroundColor: isSelected
+            ? VColor.chipBackground
+            : VColor.appbarBackground.withOpacity(0.7),
         child: Row(
           children: [
             VCircleImage(
@@ -39,34 +51,20 @@ class CabangCard extends StatelessWidget {
                   children: [
                     Text(
                       cabang.nama,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
+                    const Gap(3),
                     Text(
                       cabang.alamat,
                       maxLines: 2,
                     ),
-                    Row(
-                      children: [
-                        const Icon(Icons.male),
-                        Text(
-                          "${cabang.totalMaleTherapist}",
-                        ),
-                        const Icon(Icons.female),
-                        Text(
-                          "${cabang.totalFemaleTherapist}",
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "${cabang.totalTreatment}",
-                        ),
-                        const Icon(
-                          VIcons.therapy,
-                          size: 16,
-                        ),
-                      ],
-                    ),
+                    const Gap(3),
+                    const Text(
+                      "cabang.phoneNumber",
+                      maxLines: 2,
+                    )
                   ],
                 ),
               ),

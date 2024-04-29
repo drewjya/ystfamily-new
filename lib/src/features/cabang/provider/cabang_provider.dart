@@ -13,6 +13,22 @@ class CabangNotifier extends FamilyAsyncNotifier<List<Cabang>, int?> {
   }
 }
 
+final selectedCabangProvider = StateProvider<Cabang?>(
+  (ref) => Cabang(
+      cabangId: -1,
+      nama: '',
+      alamat: '',
+      profilePicture: '',
+      totalTreatment: -1,
+      happyHourId: -1,
+      startDay: -1,
+      startTime: '',
+      endDay: -1,
+      endTime: '',
+      totalMaleTherapist: -1,
+      totalFemaleTherapist: -1),
+);
+
 final cabangProvider =
     AsyncNotifierProviderFamily<CabangNotifier, List<Cabang>, int?>(
   () => CabangNotifier(),

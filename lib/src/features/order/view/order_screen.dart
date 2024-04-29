@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:ystfamily/src/core/core.dart';
@@ -13,42 +15,117 @@ import 'package:ystfamily/src/features/order/model/therapist.dart';
 import 'package:ystfamily/src/features/order/provider/order_provider.dart';
 import 'package:ystfamily/src/features/order/provider/therapist_provider.dart';
 
-class OrderScreen extends HookConsumerWidget {
-  final String? tipe;
-  final String? branchName;
-  const OrderScreen({super.key, this.tipe, this.branchName});
+class OrderScreen extends StatefulHookConsumerWidget {
+  final String branchName;
+  const OrderScreen({super.key, required this.branchName});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cabang = useState<Cabang?>(null);
-    final currentTreatment = useState<String?>(null);
+  ConsumerState<ConsumerStatefulWidget> createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends ConsumerState<OrderScreen>
+    with TickerProviderStateMixin {
+  final overlayKey = GlobalKey();
+  AnimationController? animationController;
+  Animation<double>? animation;
+  OverlayState? overlayState;
+  OverlayEntry? overlayEntry;
+
+  late TextEditingController therapistController;
+  OverlayEntry? _overlayEntry;
+  OverlayState? overlay;
+  late FocusNode therapistFocus;
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    animation =
+        CurveTween(curve: Curves.fastOutSlowIn).animate(animationController!);
+    therapistController = TextEditingController();
+    therapistFocus = FocusNode();
+    therapistFocus.addListener(_handleFocusChange);
+  }
+
+  void _handleFocusChange() {
+    log("LISTENER ");
+    if (therapistFocus.hasFocus) {
+      _showOverlay(context);
+    } else {
+      _removeOverlay();
+    }
+  }
+
+  void _showOverlay(BuildContext context) {
+    overlay = Overlay.of(context);
+    _removeOverlay();
+    final renderBox =
+        overlayKey.currentContext?.findRenderObject() as RenderBox?;
+
+    final position = renderBox?.localToGlobal(Offset.zero);
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: (position?.dy ?? 20) + 50,
+        left: 10,
+        right: 10,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Material(
+            elevation: 4.0,
+            child: ValueListenableBuilder(
+                valueListenable: therapistController,
+                builder: (context, value, child) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                    ),
+                    color: VColor.cardBackground,
+                    height: 200,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:
+                              List.generate(10, (index) => Text("$index AYAm")),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+          ),
+        ),
+      ),
+    );
+    overlay?.insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  void dispose() {
+    therapistFocus.removeListener(_handleFocusChange);
+    therapistFocus.dispose();
+    _removeOverlay();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cabang = ref.watch(selectedCabangProvider);
+
     final selectedTreatment = useState<Map<int, Treatment>>({});
     final selectedAdditional = useState<Map<int, AdditionalTreatment>>({});
 
     final selectedTherapistGender = useState<Gender?>(null);
-    final listController = useState(<ExpansionTileController>[]);
+
     final selectedTherapist = useState<Therapist?>(null);
-    final jamController = useTextEditingController();
+
     final jamTerapi = useState<String?>(null);
     final selectedDate = useState<DateTime?>(null);
-    final isVisible = cabang.value != null &&
-        selectedDate.value != null &&
-        selectedTherapistGender.value != null;
-
-    useEffect(
-      () {
-        listController.value =
-            List.generate(4, (index) => ExpansionTileController());
-        return null;
-      },
-      [],
-    );
-    useEffect(() {
-      final daa = ref.read(cabangProvider(null)).valueOrNull ?? [];
-      cabang.value =
-          daa.firstWhereOrNull((element) => element.nama == branchName);
-      currentTreatment.value = tipe;
-      return null;
-    }, []);
 
     useEffect(() {
       selectedTreatment.value = {};
@@ -60,9 +137,9 @@ class OrderScreen extends HookConsumerWidget {
     useEffect(() {
       selectedTreatment.value = {};
       jamTerapi.value = null;
-
       return;
     }, [selectedTherapist.value]);
+
     final isLoading = useState(false);
     ref.listen(orderProvider, (previous, next) {
       next.when(
@@ -102,37 +179,54 @@ class OrderScreen extends HookConsumerWidget {
       );
     });
 
-    return DefaultTextStyle(
-      style: const TextStyle(
-        color: VColor.darkBrown,
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Order"),
-          backgroundColor: VColor.appbarBackground,
-          foregroundColor: VColor.darkBrown,
-          elevation: 0,
-          centerTitle: true,
+    return GestureDetector(
+      onTap: () {
+        log("LOSE FOCUS");
+
+        therapistFocus.unfocus();
+        _removeOverlay();
+      },
+      child: DefaultTextStyle(
+        style: const TextStyle(
+          color: VColor.darkBrown,
         ),
-        backgroundColor: Colors.white,
-        body: BodyFormWidget(
-          children: [
-            const Text("Pilih Cabang"),
-            SizedBox(
-              height: 100,
-              child: Consumer(
-                builder: (context, ref, child) {
-                  final cabangs = ref.watch(cabangProvider(null));
-                  return cabangs.when(
-                    data: (data) => CabangSelectorWidget(
-                      cabangs: data,
-                      onTap: (curr) {
-                        cabang.value = curr;
-                        if (cabang.value != null &&
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Order"),
+            backgroundColor: VColor.appbarBackground,
+            foregroundColor: VColor.darkBrown,
+            elevation: 0,
+            centerTitle: true,
+          ),
+          backgroundColor: Colors.white,
+          body: BodyFormWidget(
+            children: [
+              if (cabang != null)
+                CabangCard(
+                  start: true,
+                  cabang: cabang,
+                  isSelected: true,
+                ),
+              const Text("Jenis Kelamin Therapist"),
+              const Gap(8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: Gender.values.mapIndexed((index, element) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
+                    child: ChoiceChip.elevated(
+                      label: Text(element.value),
+                      selectedColor: VColor.appbarBackground.withOpacity(.7),
+                      selected: selectedTherapistGender.value == element,
+                      backgroundColor:
+                          VColor.primaryBackground.withOpacity(0.5),
+                      onSelected: (value) {
+                        selectedTherapistGender.value = element;
+                        if (cabang != null &&
                             selectedTherapistGender.value != null &&
                             selectedDate.value != null) {
                           final params = TherapistType(
-                              cabangId: cabang.value!.cabangId,
+                              cabangId: cabang.cabangId,
                               tanggal: selectedDate.value!.yearMonthDate(),
                               gender: selectedTherapistGender.value!.nama);
                           ref
@@ -140,390 +234,236 @@ class OrderScreen extends HookConsumerWidget {
                               .load(arg: params);
                         }
                       },
-                      onSelected: (curr) => cabang.value == curr,
                     ),
-                    error: (error, stackTrace) {
-                      return Text("$error");
-                    },
-                    loading: () {
-                      return const LoadingWidget();
-                    },
                   );
-                },
+                }).toList(),
               ),
-            ),
-            const Text("Jenis Kelamin Therapist"),
-            const Gap(8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: Gender.values.mapIndexed((index, element) {
-                return Padding(
-                  padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
-                  child: ChoiceChip.elevated(
-                    label: Text(element.value),
-                    selectedColor: VColor.appbarBackground.withOpacity(.7),
-                    selected: selectedTherapistGender.value == element,
-                    backgroundColor: VColor.primaryBackground.withOpacity(0.5),
-                    onSelected: (value) {
-                      selectedTherapistGender.value = element;
-                      if (cabang.value != null &&
-                          selectedTherapistGender.value != null &&
-                          selectedDate.value != null) {
-                        final params = TherapistType(
-                            cabangId: cabang.value!.cabangId,
-                            tanggal: selectedDate.value!.yearMonthDate(),
-                            gender: selectedTherapistGender.value!.nama);
-                        ref.read(therapistProvider.notifier).load(arg: params);
-                      }
-                    },
-                  ),
-                );
-              }).toList(),
-            ),
-            const Gap(12),
-            VCard.horizontal(
-              backgroundColor: VColor.appbarBackground.withOpacity(.7),
-              onTap: () async {
-                final date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 30)));
-                if (date != null) {
-                  selectedDate.value = date;
-                }
-                if (cabang.value != null &&
-                    selectedTherapistGender.value != null &&
-                    selectedDate.value != null) {
-                  final params = TherapistType(
-                      cabangId: cabang.value!.cabangId,
-                      tanggal: selectedDate.value!.yearMonthDate(),
-                      gender: selectedTherapistGender.value!.nama);
-                  ref.read(therapistProvider.notifier).load(arg: params);
-                }
-              },
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(selectedDate.value?.getDate() ?? "Pilih Tanggal"),
-                  const Spacer(),
-                  const Icon(Icons.calendar_today),
-                ],
-              ),
-            ),
-            const Gap(12),
-            if (isVisible)
-              Consumer(
-                builder: (context, ref, child) {
-                  final therapistProvie = ref.watch(therapistProvider);
-                  return therapistProvie.when(
-                    data: (data) => Column(
-                      children: data.toList().mapIndexed((index, e) {
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 4),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (selectedTherapist.value == null) {
-                                    selectedTherapist.value = e;
-                                    return;
-                                  }
-                                  if (selectedTherapist.value?.kode == e.kode) {
-                                    selectedTherapist.value = null;
-                                    return;
-                                  }
-
-                                  selectedTherapist.value = e;
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  color:
-                                      VColor.appbarBackground.withOpacity(0.7),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        e.kode,
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          color: VColor.darkBrown,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      AnimatedRotation(
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        turns: selectedTherapist.value?.kode ==
-                                                e.kode
-                                            ? .50
-                                            : 0,
-                                        child: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              AnimatedSize(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                  child: Container(
-                                    padding:
-                                        selectedTherapist.value?.kode == e.kode
-                                            ? const EdgeInsets.all(12)
-                                            : null,
-                                    decoration: BoxDecoration(
-                                      color: VColor.appbarBackground
-                                          .withOpacity(0.7),
-                                    ),
-                                    width: double.infinity,
-                                    child: AnimatedSwitcher(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      child: selectedTherapist.value?.kode ==
-                                              e.kode
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                TherapistTimeSlotWidget(
-                                                  therapist: e,
-                                                  onSelected: (time) {
-                                                    jamTerapi.value = time;
-                                                  },
-                                                  controller: jamController,
-                                                ),
-                                                const Gap(4),
-                                                const Text(
-                                                  "Treatment",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 18),
-                                                ),
-                                                MultiSelectDropDown(
-                                                  onOptionSelected: (options) {
-                                                    selectedTreatment.value =
-                                                        {};
-                                                    selectedTreatment.value = {
-                                                      for (var e in options)
-                                                        (e.value as Treatment)
-                                                                .treatmentId:
-                                                            e.value as Treatment
-                                                    };
-                                                  },
-                                                  maxItems: 2,
-                                                  options: e.treatmentData
-                                                      .map((e) => ValueItem(
-                                                          label: e.nama,
-                                                          value: e))
-                                                      .toList(),
-                                                  selectionType:
-                                                      SelectionType.multi,
-                                                  chipConfig: const ChipConfig(
-                                                      wrapType:
-                                                          WrapType.scroll),
-                                                  inputDecoration:
-                                                      BoxDecoration(
-                                                    color:
-                                                        VColor.cardBackground,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  dropdownHeight: 200,
-                                                  dropdownBackgroundColor:
-                                                      VColor.cardBackground,
-                                                  optionsBackgroundColor:
-                                                      VColor.cardBackground,
-                                                  hint: "Pilih Treatment",
-                                                  optionTextStyle:
-                                                      const TextStyle(
-                                                          fontSize: 16),
-                                                  hintStyle: const TextStyle(
-                                                      fontSize: 16),
-                                                  selectedOptionIcon:
-                                                      const Icon(
-                                                          Icons.check_circle),
-                                                ),
-                                                const Text(
-                                                  "Additional Treatment",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 18),
-                                                ),
-                                                MultiSelectDropDown(
-                                                  onOptionSelected: (options) {
-                                                    selectedAdditional.value =
-                                                        {};
-                                                    selectedAdditional.value = {
-                                                      for (var e in options)
-                                                        (e.value
-                                                                as AdditionalTreatment)
-                                                            .additionalTreatmentId: e
-                                                                .value
-                                                            as AdditionalTreatment
-                                                    };
-                                                  },
-                                                  maxItems: 2,
-                                                  options: e
-                                                      .additionalTreatmentData
-                                                      .map((e) => ValueItem(
-                                                          label: e.nama,
-                                                          value: e))
-                                                      .toList(),
-                                                  selectionType:
-                                                      SelectionType.multi,
-                                                  chipConfig: const ChipConfig(
-                                                      wrapType:
-                                                          WrapType.scroll),
-                                                  inputDecoration:
-                                                      BoxDecoration(
-                                                    color:
-                                                        VColor.cardBackground,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  dropdownHeight: 200,
-                                                  dropdownBackgroundColor:
-                                                      VColor.cardBackground,
-                                                  optionsBackgroundColor:
-                                                      VColor.cardBackground,
-                                                  hint:
-                                                      "Pilih Additional Treatment",
-                                                  optionTextStyle:
-                                                      const TextStyle(
-                                                          fontSize: 16),
-                                                  hintStyle: const TextStyle(
-                                                      fontSize: 16),
-                                                  selectedOptionIcon:
-                                                      const Icon(
-                                                          Icons.check_circle),
-                                                ),
-                                                const Gap(8),
-                                                Builder(
-                                                  builder: (context) {
-                                                    if (jamTerapi.value ==
-                                                        null) {
-                                                      return const SizedBox();
-                                                    }
-                                                    final price = totalPrice(
-                                                        treatment:
-                                                            selectedTreatment,
-                                                        additional:
-                                                            selectedAdditional,
-                                                        therapist: e,
-                                                        date: selectedDate,
-                                                        hour: jamTerapi);
-                                                    final duration = totalDuration(
-                                                        treatment:
-                                                            selectedTreatment,
-                                                        additional:
-                                                            selectedAdditional);
-                                                    final estimate =
-                                                        addIntervalToTime(
-                                                            jamTerapi.value ??
-                                                                '00:00:00',
-                                                            duration);
-                                                    return Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(price),
-                                                        Text(
-                                                            "Duration : $duration Menit"),
-                                                        if (jamTerapi.value !=
-                                                            null)
-                                                          Text(
-                                                              "Estimate Done : $estimate"),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                          : const SizedBox(),
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    error: (error, stackTrace) => Text("$error"),
-                    loading: () => const LoadingWidget(),
-                  );
-                },
-              ),
-            const SizedBox(
-              height: 12,
-            ),
-          ],
-        ),
-        floatingActionButton: selectedTreatment.value.isNotEmpty &&
-                jamTerapi.value != null
-            ? FloatingActionButton(
-                onPressed: () async {
-                  final submit = await showDialog(
-                    context: context,
-                    builder: (context) {
-                      return SubmitOrderDialog(
-                        selectedAdditional: selectedAdditional.value,
-                        cabang: cabang.value!,
-                        selectedTherapist: selectedTherapist.value!,
-                        jamTerapi: jamTerapi.value!,
-                        selectedDate: selectedDate.value!,
-                        selectedTreatment: selectedTreatment.value,
-                      );
-                    },
-                  );
-                  if (submit) {
-                    final trD = selectedTreatment.value.values
-                        .mapIndexed((index, e) => OrderDetailDTO.treatment(
-                            treatmentId: e.treatmentId,
-                            happyHour: happyHour(
-                                    date: selectedDate.value!,
-                                    therapist: selectedTherapist.value!,
-                                    selectedHour: jamTerapi.value!,
-                                    previousTreatment: index == 0
-                                        ? null
-                                        : selectedTreatment.value.values
-                                            .elementAt(index - 1)) &&
-                                e.happyHourPrice != null))
-                        .toList();
-                    final adD = selectedAdditional.value.values
-                        .map((e) => OrderDetailDTO.additional(
-                            additionalTreatmentId: e.additionalTreatmentId))
-                        .toList();
-                    final selectedDTO = OrderDto(
-                      genderTherapist:
-                          selectedTherapistGender.value!.nama == "male",
-                      cabangId: cabang.value!.cabangId,
-                      therapistId: selectedTherapist.value!.therapistId ?? -1,
-                      orderStartTime: jamTerapi.value!,
-                      orderDate: selectedDate.value!.toUtc(),
-                      treatments: [...trD, ...adD],
-                    );
-
-                    ref
-                        .read(orderProvider.notifier)
-                        .postOrder(body: selectedDTO);
+              const Gap(12),
+              VCard.horizontal(
+                backgroundColor: VColor.appbarBackground.withOpacity(.7),
+                onTap: () async {
+                  final now = DateTime.now();
+                  final date = await showDatePicker(
+                      context: context,
+                      initialDate: now.add(const Duration(days: 1)),
+                      firstDate: now.add(const Duration(days: 1)),
+                      lastDate: now.add(const Duration(days: 30)));
+                  if (date != null) {
+                    selectedDate.value = date;
+                  }
+                  if (cabang != null &&
+                      selectedTherapistGender.value != null &&
+                      selectedDate.value != null) {
+                    final params = TherapistType(
+                        cabangId: cabang.cabangId,
+                        tanggal: selectedDate.value!.yearMonthDate(),
+                        gender: selectedTherapistGender.value!.nama);
+                    ref.read(therapistProvider.notifier).load(arg: params);
                   }
                 },
-                child: const Icon(Icons.save),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(selectedDate.value?.getDate() ?? "Pilih Tanggal"),
+                    const Spacer(),
+                    const Icon(Icons.calendar_today),
+                  ],
+                ),
+              ),
+              const Gap(12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Pilih Therapist (Optional)",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                  TextField(
+                    controller: therapistController,
+                    focusNode: therapistFocus,
+                    key: overlayKey,
+                    onChanged: (value) {
+                      _showOverlay(context);
+                    },
+                    decoration: inputStyle.copyWith(
+                      contentPadding: const EdgeInsets.all(12),
+                      fillColor: VColor.cardBackground,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: VColor.cardBackground,
+                        ),
+                      ),
+                      hintText: 'Nama Therapist',
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: VColor.darkBrown,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        borderSide: const BorderSide(
+                          color: VColor.cardBackground,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    "Jam Terapi",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                  TherapistTimeSlotWidget(
+                    therapist: null,
+                    cabang: cabang!,
+                    onSelected: (time) {
+                      jamTerapi.value = time;
+                    },
+                    onRemoved: () {
+                      jamTerapi.value = null;
+                    },
+                  ),
+                  const Gap(4),
+                  const Text(
+                    "Treatment",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                  MultiSelectDropDown(
+                    onOptionSelected: (options) {
+                      selectedTreatment.value = {};
+                      selectedTreatment.value = {
+                        for (var e in options)
+                          (e.value as Treatment).treatmentId:
+                              e.value as Treatment
+                      };
+                    },
+                    maxItems: 2,
+                    options: []
+                        .map((e) => ValueItem(label: e.nama, value: e))
+                        .toList(),
+                    selectionType: SelectionType.multi,
+                    chipConfig: const ChipConfig(wrapType: WrapType.scroll),
+                    inputDecoration: BoxDecoration(
+                      color: VColor.cardBackground,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    dropdownHeight: 200,
+                    dropdownBackgroundColor: VColor.cardBackground,
+                    optionsBackgroundColor: VColor.cardBackground,
+                    hint: "Pilih Treatment",
+                    optionTextStyle: const TextStyle(fontSize: 16),
+                    hintStyle: const TextStyle(fontSize: 16),
+                    selectedOptionIcon: const Icon(Icons.check_circle),
+                  ),
+                  const Text(
+                    "Additional Treatment (Optional)",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                  MultiSelectDropDown(
+                    onOptionSelected: (options) {
+                      selectedAdditional.value = {};
+                      selectedAdditional.value = {
+                        for (var e in options)
+                          (e.value as AdditionalTreatment)
+                                  .additionalTreatmentId:
+                              e.value as AdditionalTreatment
+                      };
+                    },
+                    maxItems: 2,
+                    options: []
+                        .map((e) => ValueItem(label: e.nama, value: e))
+                        .toList(),
+                    selectionType: SelectionType.multi,
+                    chipConfig: const ChipConfig(wrapType: WrapType.scroll),
+                    inputDecoration: BoxDecoration(
+                      color: VColor.cardBackground,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    dropdownHeight: 200,
+                    dropdownBackgroundColor: VColor.cardBackground,
+                    optionsBackgroundColor: VColor.cardBackground,
+                    hint: "Pilih Additional Treatment",
+                    optionTextStyle: const TextStyle(fontSize: 16),
+                    hintStyle: const TextStyle(fontSize: 16),
+                    selectedOptionIcon: const Icon(Icons.check_circle),
+                  ),
+                  const Gap(8),
+                ],
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              VCard.horizontal(
+                backgroundColor: jamTerapi.value != null ? null : Colors.grey,
+                onTap: jamTerapi.value != null
+                    ? () async {
+                        final submit = await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return SubmitOrderDialog(
+                              selectedAdditional: selectedAdditional.value,
+                              cabang: cabang,
+                              selectedTherapist: selectedTherapist.value!,
+                              jamTerapi: jamTerapi.value!,
+                              selectedDate: selectedDate.value!,
+                              selectedTreatment: selectedTreatment.value,
+                            );
+                          },
+                        );
+                        if (submit) {
+                          final trD = selectedTreatment.value.values
+                              .mapIndexed((index, e) =>
+                                  OrderDetailDTO.treatment(
+                                      treatmentId: e.treatmentId,
+                                      happyHour: happyHour(
+                                              date: selectedDate.value!,
+                                              therapist:
+                                                  selectedTherapist.value!,
+                                              selectedHour: jamTerapi.value!,
+                                              previousTreatment: index == 0
+                                                  ? null
+                                                  : selectedTreatment
+                                                      .value.values
+                                                      .elementAt(index - 1)) &&
+                                          e.happyHourPrice != null))
+                              .toList();
+                          final adD = selectedAdditional.value.values
+                              .map((e) => OrderDetailDTO.additional(
+                                  additionalTreatmentId:
+                                      e.additionalTreatmentId))
+                              .toList();
+                          final selectedDTO = OrderDto(
+                            genderTherapist:
+                                selectedTherapistGender.value!.nama == "male",
+                            cabangId: cabang.cabangId,
+                            therapistId:
+                                selectedTherapist.value!.therapistId ?? -1,
+                            orderStartTime: jamTerapi.value!,
+                            orderDate: selectedDate.value!.toUtc(),
+                            treatments: [...trD, ...adD],
+                          );
+
+                          ref
+                              .read(orderProvider.notifier)
+                              .postOrder(body: selectedDTO);
+                        }
+                      }
+                    : null,
+                child: Center(
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: jamTerapi.value != null ? null : Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
               )
-            : null,
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -755,16 +695,27 @@ class SubmitOrderDialog extends HookConsumerWidget {
   }
 }
 
+addZero(int number) {
+  return number < 10 ? '0$number' : '$number';
+}
+
+List<String> generateList() {
+  return List.generate(
+      ((22 - 8) ~/ 2), (index) => '${addZero(((index * 2) + 8))}:00:00');
+}
+
 class TherapistTimeSlotWidget extends StatelessWidget {
   const TherapistTimeSlotWidget({
     Key? key,
-    required this.therapist,
-    this.controller,
+    this.therapist,
+    required this.cabang,
+    required this.onRemoved,
     required this.onSelected,
   }) : super(key: key);
 
-  final Therapist therapist;
-  final TextEditingController? controller;
+  final Therapist? therapist;
+  final Cabang cabang;
+  final VoidCallback onRemoved;
   final void Function(String time) onSelected;
 
   @override
@@ -774,13 +725,23 @@ class TherapistTimeSlotWidget extends StatelessWidget {
       children: [
         MultiSelectDropDown(
           onOptionSelected: (options) {
+            log("$options");
             if (options.isNotEmpty) {
               onSelected(options.last.value as String);
+            } else {
+              onRemoved();
             }
           },
-          options: therapist.availableTimeSlots.reversed
-              .map((e) => ValueItem(label: e, value: e))
-              .toList(),
+          options: therapist != null
+              ? therapist!.availableTimeSlots.reversed
+                  .map((e) => ValueItem(label: e, value: e))
+                  .toList()
+              : generateList()
+                  .map((e) => ValueItem(
+                        label: e,
+                        value: e,
+                      ))
+                  .toList(),
           selectionType: SelectionType.single,
           maxItems: 5,
           chipConfig: const ChipConfig(wrapType: WrapType.scroll),

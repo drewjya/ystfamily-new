@@ -408,22 +408,18 @@ extension $EditProfileRouteExtension on EditProfileRoute {
 }
 
 RouteBase get $orderRoute => GoRouteData.$route(
-      path: '/order/:tipe',
+      path: '/order/:branch',
       parentNavigatorKey: OrderRoute.$parentNavigatorKey,
       factory: $OrderRouteExtension._fromState,
     );
 
 extension $OrderRouteExtension on OrderRoute {
   static OrderRoute _fromState(GoRouterState state) => OrderRoute(
-        tipe: state.pathParameters['tipe']!,
-        branch: state.uri.queryParameters['branch'],
+        branch: state.pathParameters['branch']!,
       );
 
   String get location => GoRouteData.$location(
-        '/order/${Uri.encodeComponent(tipe)}',
-        queryParams: {
-          if (branch != null) 'branch': branch,
-        },
+        '/order/${Uri.encodeComponent(branch)}',
       );
 
   void go(BuildContext context) => context.go(location);

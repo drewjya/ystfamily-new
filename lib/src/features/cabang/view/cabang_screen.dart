@@ -45,10 +45,8 @@ class CabangScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.all(24),
                   itemCount: cabangs.length,
                   itemBuilder: (context, index) => CabangCard(
-                      onTap: () {
-                        OrderRoute(tipe: tipe, branch: cabangs[index].nama)
-                            .push(context);
-                      },
+                      onTap: (caabna) =>
+                          OrderRoute(branch: cabangs[index].nama).push(context),
                       start: index != cabangs.length,
                       cabang: cabangs[index]),
                 );

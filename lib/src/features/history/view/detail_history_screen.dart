@@ -161,7 +161,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                     if (index == 4) {
                       return Row(
                         children: [
-                          const Text("Lama Treatment"),
+                          const Text("Durasi Treatment"),
                           const Spacer(),
                           Text(
                             data.treatments.time,
@@ -203,7 +203,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                     if (index == 7) {
                       return Row(
                         children: [
-                          const Text("Esitmasi"),
+                          const Text("Waktu Treatment"),
                           const Spacer(),
                           Text("${data.orderStartTime} - ${data.orderEndTime}"),
                         ],

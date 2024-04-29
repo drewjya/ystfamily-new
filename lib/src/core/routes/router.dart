@@ -23,17 +23,21 @@ import '../core.dart';
 
 part 'router.g.dart';
 
-Page<void> _buildCustomTransition(BuildContext context, GoRouterState state, Widget child) => CupertinoPage(child: child);
+Page<void> _buildCustomTransition(
+        BuildContext context, GoRouterState state, Widget child) =>
+    CupertinoPage(child: child);
 
 @TypedGoRoute<SplashRoute>(path: SplashRoute.routeName)
 class SplashRoute extends GoRouteData {
   static const routeName = "/splash";
   const SplashRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const SplashScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, const SplashScreen());
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const SplashScreen());
 }
 
 @TypedGoRoute<LoginRoute>(path: LoginRoute.routeName)
@@ -41,10 +45,12 @@ class LoginRoute extends GoRouteData {
   static const routeName = "/login";
   const LoginRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const LoginScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const LoginScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, const LoginScreen());
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const LoginScreen());
 }
 
 @TypedGoRoute<RegisterRoute>(path: RegisterRoute.routeName)
@@ -53,10 +59,12 @@ class RegisterRoute extends GoRouteData {
   const RegisterRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const RegisterScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const RegisterScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, const RegisterScreen());
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const RegisterScreen());
 }
 
 @TypedGoRoute<ForgetPasswordRoute>(path: ForgetPasswordRoute.routeName)
@@ -64,10 +72,12 @@ class ForgetPasswordRoute extends GoRouteData {
   static const routeName = "/forget-password";
   const ForgetPasswordRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ForgetPasswordScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ForgetPasswordScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => CupertinoPage(child: build(context, state));
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      CupertinoPage(child: build(context, state));
 }
 
 @TypedGoRoute<OTPRoute>(path: OTPRoute.routeName)
@@ -79,7 +89,8 @@ class OTPRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) => const OTPScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, const OTPScreen());
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const OTPScreen());
 }
 
 @TypedGoRoute<OtpForgetPasswordRoute>(path: OtpForgetPasswordRoute.routeName)
@@ -90,10 +101,12 @@ class OtpForgetPasswordRoute extends GoRouteData {
     this.email,
   );
   @override
-  Widget build(BuildContext context, GoRouterState state) => OTPConfirmationPasswordScreen(email: email);
+  Widget build(BuildContext context, GoRouterState state) =>
+      OTPConfirmationPasswordScreen(email: email);
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, build(context, state));
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, build(context, state));
 }
 
 @TypedGoRoute<OTPLoginRoute>(path: OTPLoginRoute.routeName)
@@ -102,10 +115,12 @@ class OTPLoginRoute extends GoRouteData {
 
   const OTPLoginRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const OTPLoginScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const OTPLoginScreen();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => _buildCustomTransition(context, state, const OTPLoginScreen());
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const OTPLoginScreen());
 }
 
 @TypedShellRoute<HomeRoute>(
@@ -137,7 +152,10 @@ class HomePageRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CupertinoPage(child: HeroControllerScope(controller: MaterialApp.createMaterialHeroController(), child: build(context, state)));
+    return CupertinoPage(
+        child: HeroControllerScope(
+            controller: MaterialApp.createMaterialHeroController(),
+            child: build(context, state)));
   }
 }
 
@@ -146,7 +164,8 @@ class HistoryPageRoute extends GoRouteData {
   const HistoryPageRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const HistoryPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const HistoryPage();
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
@@ -159,7 +178,8 @@ class ProfilePageRoute extends GoRouteData {
   const ProfilePageRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ProfilePage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ProfilePage();
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -174,7 +194,8 @@ class NotificationPageRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const NotificationScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const NotificationScreen();
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -210,7 +231,8 @@ class DetailHistoryRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => DetailHistoryScreen(id: id);
+  Widget build(BuildContext context, GoRouterState state) =>
+      DetailHistoryScreen(id: id);
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -227,7 +249,8 @@ class RescheduleOrderRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => RescheduleOrderScreen(id: id);
+  Widget build(BuildContext context, GoRouterState state) =>
+      RescheduleOrderScreen(id: id);
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -242,7 +265,8 @@ class ChangePasswordRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const ChangePasswordScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ChangePasswordScreen();
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -257,7 +281,8 @@ class EditProfileRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const EditProfileScreen();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EditProfileScreen();
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));
@@ -266,18 +291,16 @@ class EditProfileRoute extends GoRouteData {
 
 @TypedGoRoute<OrderRoute>(path: OrderRoute.routeName)
 class OrderRoute extends GoRouteData {
-  static const routeName = "/order/:tipe";
+  static const routeName = "/order/:branch";
 
-  final String tipe;
-  final String? branch;
+  final String branch;
 
-  const OrderRoute({required this.tipe, this.branch});
+  const OrderRoute({required this.branch});
   static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return OrderScreen(
-      tipe: tipe,
       branchName: branch,
     );
   }

@@ -60,7 +60,7 @@ dependencies:
   dev: ^1.0.0
   build_runner: ^2.4.9
   riverpod_generator: ^2.4.0
-  custom_lint: ^0.6.2
+  
   riverpod_lint: ^2.3.10
   go_router_builder: ^2.5.1
   flutter_launcher_icons: ^0.13.1
@@ -78,6 +78,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  custom_lint: ^0.6.2
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

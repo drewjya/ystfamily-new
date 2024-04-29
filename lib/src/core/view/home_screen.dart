@@ -36,6 +36,7 @@ class HomeScreen extends HookConsumerWidget {
               surfaceTintColor: Colors.transparent,
               backgroundColor: VColor.appbarBackground,
               foregroundColor: VColor.darkBrown,
+              centerTitle: true,
               title: Image.asset("assets/logo.png", width: 60),
               actions: [
                 IconButton(
