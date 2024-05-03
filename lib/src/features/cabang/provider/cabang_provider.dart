@@ -25,8 +25,8 @@ final selectedCabangProvider = StateProvider<Cabang?>(
       startTime: '',
       endDay: -1,
       endTime: '',
-      totalMaleTherapist: -1,
-      totalFemaleTherapist: -1),
+      
+      phoneNumber: ''),
 );
 
 final cabangProvider =

@@ -207,8 +207,43 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                   cabang: cabang,
                   isSelected: true,
                 ),
-              const Text("Jenis Kelamin Therapist"),
-              const Gap(8),
+              const Text(
+                "Jenis Kelamin Terapis",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: Gender.values.mapIndexed((index, element) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
+                    child: ChoiceChip.elevated(
+                      label: Text(element.value),
+                      selectedColor: VColor.appbarBackground.withOpacity(.7),
+                      selected: selectedTherapistGender.value == element,
+                      backgroundColor:
+                          VColor.primaryBackground.withOpacity(0.5),
+                      onSelected: (value) {
+                        selectedTherapistGender.value = element;
+                        if (cabang != null &&
+                            selectedTherapistGender.value != null &&
+                            selectedDate.value != null) {
+                          final params = TherapistType(
+                              cabangId: cabang.cabangId,
+                              tanggal: selectedDate.value!.yearMonthDate(),
+                              gender: selectedTherapistGender.value!.nama);
+                          ref
+                              .read(therapistProvider.notifier)
+                              .load(arg: params);
+                        }
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+              const Text(
+                "Jenis Kelamin Tamu",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: Gender.values.mapIndexed((index, element) {
@@ -275,7 +310,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Pilih Therapist (Optional)",
+                    "Pilih Terapis (Opsional)",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                   TextField(
@@ -295,7 +330,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                           color: VColor.cardBackground,
                         ),
                       ),
-                      hintText: 'Nama Therapist',
+                      hintText: 'Nama Terapis',
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4),
                         borderSide: const BorderSide(
@@ -357,7 +392,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     selectedOptionIcon: const Icon(Icons.check_circle),
                   ),
                   const Text(
-                    "Additional Treatment (Optional)",
+                    "Treatment Tambahan (Opsional)",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                   MultiSelectDropDown(
@@ -383,7 +418,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     dropdownHeight: 200,
                     dropdownBackgroundColor: VColor.cardBackground,
                     optionsBackgroundColor: VColor.cardBackground,
-                    hint: "Pilih Additional Treatment",
+                    hint: "Pilih Treatment Tambahan (Opsional)",
                     optionTextStyle: const TextStyle(fontSize: 16),
                     hintStyle: const TextStyle(fontSize: 16),
                     selectedOptionIcon: const Icon(Icons.check_circle),

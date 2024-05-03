@@ -11,8 +11,8 @@ class Cabang {
   final String? startTime;
   final int? endDay;
   final String? endTime;
-  final int totalMaleTherapist;
-  final int totalFemaleTherapist;
+  final String phoneNumber;
+
   Cabang({
     required this.cabangId,
     required this.nama,
@@ -24,8 +24,7 @@ class Cabang {
     required this.startTime,
     required this.endDay,
     required this.endTime,
-    required this.totalMaleTherapist,
-    required this.totalFemaleTherapist,
+    required this.phoneNumber,
   });
 
   Cabang copyWith({
@@ -39,23 +38,20 @@ class Cabang {
     String? startTime,
     int? endDay,
     String? endTime,
-    int? totalMaleTherapist,
-    int? totalFemaleTherapist,
+    String? phoneNumber,
   }) {
     return Cabang(
-      cabangId: cabangId ?? this.cabangId,
-      nama: nama ?? this.nama,
-      alamat: alamat ?? this.alamat,
-      profilePicture: profilePicture ?? this.profilePicture,
-      totalTreatment: totalTreatment ?? this.totalTreatment,
-      happyHourId: happyHourId ?? this.happyHourId,
-      startDay: startDay ?? this.startDay,
-      startTime: startTime ?? this.startTime,
-      endDay: endDay ?? this.endDay,
-      endTime: endTime ?? this.endTime,
-      totalMaleTherapist: totalMaleTherapist ?? this.totalMaleTherapist,
-      totalFemaleTherapist: totalFemaleTherapist ?? this.totalFemaleTherapist,
-    );
+        cabangId: cabangId ?? this.cabangId,
+        nama: nama ?? this.nama,
+        alamat: alamat ?? this.alamat,
+        profilePicture: profilePicture ?? this.profilePicture,
+        totalTreatment: totalTreatment ?? this.totalTreatment,
+        happyHourId: happyHourId ?? this.happyHourId,
+        startDay: startDay ?? this.startDay,
+        startTime: startTime ?? this.startTime,
+        endDay: endDay ?? this.endDay,
+        endTime: endTime ?? this.endTime,
+        phoneNumber: phoneNumber ?? this.phoneNumber);
   }
 
   factory Cabang.fromMap(Map<String, dynamic> map) {
@@ -70,14 +66,13 @@ class Cabang {
       startTime: map['start_time'] as String?,
       endDay: map['end_day'] as int?,
       endTime: map['end_time'] as String?,
-      totalMaleTherapist: map['total_male_therapist'] as int,
-      totalFemaleTherapist: map['total_female_therapist'] as int,
+      phoneNumber: map['phone_number'] as String,
     );
   }
 
   @override
   String toString() {
-    return 'Cabang(cabangId: $cabangId, nama: $nama, alamat: $alamat, profilePicture: $profilePicture, totalTreatment: $totalTreatment, happyHourId: $happyHourId, startDay: $startDay, startTime: $startTime, endDay: $endDay, endTime: $endTime, totalMaleTherapist: $totalMaleTherapist, totalFemaleTherapist: $totalFemaleTherapist)';
+    return 'Cabang(cabangId: $cabangId, nama: $nama, alamat: $alamat, profilePicture: $profilePicture, totalTreatment: $totalTreatment, happyHourId: $happyHourId, startDay: $startDay, startTime: $startTime, endDay: $endDay, endTime: $endTime, phoneNumber: $phoneNumber)';
   }
 
   @override
@@ -94,8 +89,7 @@ class Cabang {
         other.startTime == startTime &&
         other.endDay == endDay &&
         other.endTime == endTime &&
-        other.totalMaleTherapist == totalMaleTherapist &&
-        other.totalFemaleTherapist == totalFemaleTherapist;
+        other.phoneNumber == phoneNumber;
   }
 
   @override
@@ -110,7 +104,6 @@ class Cabang {
         startTime.hashCode ^
         endDay.hashCode ^
         endTime.hashCode ^
-        totalMaleTherapist.hashCode ^
-        totalFemaleTherapist.hashCode;
+        phoneNumber.hashCode;
   }
 }

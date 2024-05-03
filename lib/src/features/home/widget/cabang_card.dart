@@ -61,8 +61,8 @@ class CabangCard extends ConsumerWidget {
                       maxLines: 2,
                     ),
                     const Gap(3),
-                    const Text(
-                      "cabang.phoneNumber",
+                    Text(
+                      cabang.phoneNumber,
                       maxLines: 2,
                     )
                   ],
