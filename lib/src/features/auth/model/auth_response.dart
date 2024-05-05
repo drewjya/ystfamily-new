@@ -23,8 +23,8 @@ class Session {
 
   factory Session.fromMap(Map<String, dynamic> map) {
     return Session(
-      accessToken: map['access_token'] as String,
-      refreshToken: map['refresh_token'] as String,
+      accessToken: map['accessToken'] as String,
+      refreshToken: map['refreshToken'] as String,
     );
   }
 
@@ -67,8 +67,8 @@ class AuthResponse {
 
   factory AuthResponse.fromMap(Map<String, dynamic> map) {
     return AuthResponse(
-      account: User.fromMap(map['account'] as Map<String, dynamic>),
-      session: Session.fromMap(map['session'] as Map<String, dynamic>),
+      account: User.fromMap(map['user'] as Map<String, dynamic>),
+      session: Session.fromMap(map['token'] as Map<String, dynamic>),
     );
   }
 

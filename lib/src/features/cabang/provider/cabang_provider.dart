@@ -5,31 +5,31 @@ import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/cabang/model/model.dart';
 import 'package:ystfamily/src/features/cabang/repository/cabang_repository_impl.dart';
 
-class CabangNotifier extends FamilyAsyncNotifier<List<Cabang>, int?> {
+class CabangNotifier
+    extends AutoDisposeFamilyAsyncNotifier<List<Cabang>, int?> {
   CabangNotifier();
   @override
   FutureOr<List<Cabang>> build(int? arg) {
-    return ref.read(cabangRepositoryProvider).getCabang(categoryId: arg);
+    return ref.read(cabangRepositoryProvider).getCabangLimit(limit: arg);
   }
 }
 
-final selectedCabangProvider = StateProvider<Cabang?>(
-  (ref) => Cabang(
-      cabangId: -1,
-      nama: '',
-      alamat: '',
-      profilePicture: '',
-      totalTreatment: -1,
-      happyHourId: -1,
-      startDay: -1,
-      startTime: '',
-      endDay: -1,
-      endTime: '',
-      
-      phoneNumber: ''),
-);
+class CabangCategoryNotifier
+    extends AutoDisposeFamilyAsyncNotifier<List<Cabang>, String> {
+  CabangCategoryNotifier();
+  @override
+  FutureOr<List<Cabang>> build(String arg) {
+    return ref.read(cabangRepositoryProvider).getCabang(categoryName: arg);
+  }
+}
+
+final selectedCabangProvider = StateProvider<Cabang?>((ref) => null);
 
 final cabangProvider =
-    AsyncNotifierProviderFamily<CabangNotifier, List<Cabang>, int?>(
+    AutoDisposeAsyncNotifierProviderFamily<CabangNotifier, List<Cabang>, int?>(
   () => CabangNotifier(),
+);
+final cabangCategoryProvider = AutoDisposeAsyncNotifierProviderFamily<
+    CabangCategoryNotifier, List<Cabang>, String>(
+  () => CabangCategoryNotifier(),
 );

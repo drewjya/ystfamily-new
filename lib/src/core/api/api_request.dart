@@ -32,7 +32,7 @@ class ApiRequest {
           throw ApiException(message: "relogin");
         }
         return {
-          "Authorization": auth,
+          "Authorization": "Bearer $auth",
         };
       }
       final auth = pref.getString(PrefConst.accessToken);
@@ -40,7 +40,7 @@ class ApiRequest {
         throw ApiException(message: "unauthorized");
       }
       return {
-        "Authorization": auth,
+        "Authorization": "Bearer $auth",
       };
     }
     return {};
@@ -53,9 +53,14 @@ class ApiRequest {
   }) async {
     try {
       final header = _authorization(isAuth: isAuth, isRefresh: isRefresh);
+      log("$header");
       final res = await http.get(Uri.parse(url), headers: header);
-
+      log("++++++++++++++");
+      log(url);
+      log("$isRefresh $isAuth");
       final data = TResponse.fromJson(res.body);
+      log("${data.status} ${data.message} ${data.error}");
+      log("==============");
 
       if (data.status < 400) {
         return data;

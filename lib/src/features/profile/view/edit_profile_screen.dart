@@ -69,7 +69,16 @@ class VCircleImage extends HookWidget {
           child: CircleAvatar(
             radius: radius,
             backgroundColor: VColor.darkBrown,
-            child: foregroundImage ?? const Text("Pilih Gambar"),
+            child: Center(
+              child: foregroundImage ??
+                  const Text(
+                    "",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+            ),
           ),
         ),
       ),
@@ -91,7 +100,7 @@ class EditProfileScreen extends HookConsumerWidget {
     final uint8List = useState<Uint8List?>(null);
     useEffect(() {
       final user = ref.read(authProvider);
-      namaController.text = user.value?.nama ?? "";
+      namaController.text = user.value?.name ?? "";
       phoneNumberController.text = user.value?.phoneNumber ?? "";
       selectedGender.value = Gender.values.firstWhereOrNull(
               (element) => element.value == user.value?.gender) ??
@@ -169,7 +178,7 @@ class EditProfileScreen extends HookConsumerWidget {
                   },
                   file: uint8List.value,
                   url: ref.watch(authProvider
-                      .select((value) => value.asData?.value.profilePicture)),
+                      .select((value) => value.asData?.value.picture)),
                 ),
                 const Gap(12),
                 TextFormField(
@@ -247,7 +256,7 @@ class EditProfileScreen extends HookConsumerWidget {
                           .updateProfile(
                               params: UpdateProfileDTO(
                             gender: selectedGender.value.value,
-                            nama: user?.nama == namaController.text ||
+                            nama: user?.name == namaController.text ||
                                     namaController.text.isEmpty
                                 ? null
                                 : namaController.text,

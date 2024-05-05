@@ -36,7 +36,7 @@ class LoginScreen extends HookConsumerWidget {
             dialogShown.value = false;
             nv.pop();
           }
-          if (value.verified) {
+          if (value.isConfirmed) {
             const HomePageRoute().go(context);
           } else {
             const OTPRoute().push(context);

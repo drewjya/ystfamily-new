@@ -13,7 +13,7 @@ class SplashScreen extends HookConsumerWidget {
           Future.delayed(
             const Duration(seconds: 2),
             () {
-              if (value.verified) {
+              if (value.isConfirmed) {
                 const HomePageRoute().go(context);
               } else {
                 const OTPRoute().go(context);

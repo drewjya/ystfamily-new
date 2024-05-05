@@ -1,3 +1,4 @@
+import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/cabang/cabang.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
@@ -37,7 +38,7 @@ class CabangCard extends ConsumerWidget {
         child: Row(
           children: [
             VCircleImage(
-              url: cabang.profilePicture,
+              url: cabang.picture == null ? null : '$image${cabang.picture}',
               radius: 35,
             ),
             const Gap(8),

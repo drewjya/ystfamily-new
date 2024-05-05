@@ -11,9 +11,17 @@ class HistoryRepositoryImpl implements HistoryRepository {
     required this.request,
   });
   @override
-  Future<List<HistoryOrder>> getHistoryOrder({required int orderStatus, required int limit, required int offset}) async {
-    final res = await request.get(url: ApiPath.orderHistory(orderStatus, limit, offset), isAuth: true, isRefresh: false);
-    return (res.data as List).cast<Map<String, dynamic>>().map((e) => HistoryOrder.fromMap(e)).toList().cast<HistoryOrder>();
+  Future<List<HistoryOrder>> getHistoryOrder(
+      {required OrderStatus orderStatus}) async {
+    final res = await request.get(
+        url: OrderPath.orderHistory(orderStatus),
+        isAuth: true,
+        isRefresh: false);
+    return (res.data as List)
+        .cast<Map<String, dynamic>>()
+        .map((e) => HistoryOrder.fromMap(e))
+        .toList()
+        .cast<HistoryOrder>();
   }
 }
 

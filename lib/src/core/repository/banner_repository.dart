@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/api/api_request.dart';
@@ -14,12 +16,12 @@ class IBannerRepository implements BannerRepository {
 
   @override
   Future<List<String>> getBanners() async {
-    final res =
-        await request.get(url: ApiPath.banner, isAuth: true, isRefresh: false);
-    return ((res.data as List?) ?? [])
-        .cast<Map<String, dynamic>>()
-        .map((e) => '${e['image_url']}')
-        .toList();
+    final res = await request.get(
+        url: BannerPath.banner, isAuth: true, isRefresh: false);
+    return ((res.data as List?) ?? []).cast<Map<String, dynamic>>().map((e) {
+      log("$e");
+      return '${e['picture']['path']}';
+    }).toList();
   }
 }
 

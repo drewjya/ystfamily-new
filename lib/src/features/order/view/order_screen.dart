@@ -146,8 +146,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
         data: (data) {
           if (isLoading.value) {
             isLoading.value = false;
-            ref.read(filterProvider.notifier).changeFilter(
-                filter: FilterHistory.pending, limit: 10, offset: 0);
+            ref.invalidate(orderStatusProvider);
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text("Order Berhasil")));
@@ -228,7 +227,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                             selectedTherapistGender.value != null &&
                             selectedDate.value != null) {
                           final params = TherapistType(
-                              cabangId: cabang.cabangId,
+                              cabangId: cabang.id,
                               tanggal: selectedDate.value!.yearMonthDate(),
                               gender: selectedTherapistGender.value!.nama);
                           ref
@@ -261,7 +260,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                             selectedTherapistGender.value != null &&
                             selectedDate.value != null) {
                           final params = TherapistType(
-                              cabangId: cabang.cabangId,
+                              cabangId: cabang.id,
                               tanggal: selectedDate.value!.yearMonthDate(),
                               gender: selectedTherapistGender.value!.nama);
                           ref
@@ -290,7 +289,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                       selectedTherapistGender.value != null &&
                       selectedDate.value != null) {
                     final params = TherapistType(
-                        cabangId: cabang.cabangId,
+                        cabangId: cabang.id,
                         tanggal: selectedDate.value!.yearMonthDate(),
                         gender: selectedTherapistGender.value!.nama);
                     ref.read(therapistProvider.notifier).load(arg: params);
@@ -471,7 +470,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                           final selectedDTO = OrderDto(
                             genderTherapist:
                                 selectedTherapistGender.value!.nama == "male",
-                            cabangId: cabang.cabangId,
+                            cabangId: cabang.id,
                             therapistId:
                                 selectedTherapist.value!.therapistId ?? -1,
                             orderStartTime: jamTerapi.value!,

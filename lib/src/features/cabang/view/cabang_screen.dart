@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/features/cabang/cabang.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 import 'package:ystfamily/src/features/cabang/provider/category_provider.dart';
 import 'package:ystfamily/src/features/home/home.dart';
@@ -26,12 +27,17 @@ class CabangScreen extends HookConsumerWidget {
         color: Colors.white,
         child: Consumer(
           builder: (context, ref, child) {
-            final category =
+            var category =
                 (ref.watch(categoryProvider).value ?? []).firstWhereOrNull(
               (element) => element.nama == tipe,
             );
+            AsyncValue<List<Cabang>> cabangData;
+            if (category != null) {
+              cabangData = ref.watch(cabangCategoryProvider(category.nama));
+            } else {
+              cabangData = ref.watch(cabangProvider(null));
+            }
 
-            final cabangData = ref.watch(cabangProvider(category?.id));
             return cabangData.when(
               data: (cabangs) {
                 if (cabangs.isEmpty) {

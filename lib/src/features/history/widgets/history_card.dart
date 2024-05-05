@@ -1,6 +1,5 @@
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/model/history_order.dart';
-import 'package:ystfamily/src/features/order/order.dart';
 
 class HistoryCard extends StatelessWidget {
   final HistoryOrder history;
@@ -22,7 +21,7 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                history.orderNumber,
+                history.orderId,
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 18,
@@ -35,9 +34,10 @@ class HistoryCard extends StatelessWidget {
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 child: Text(
-                  history.status,
+                  history.orderStatus,
                   style: const TextStyle(
                     color: VColor.secondaryBackground,
                     fontSize: 10,
@@ -53,7 +53,7 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                history.cabangNama,
+                "history.cabangNama",
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -61,7 +61,8 @@ class HistoryCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Text("Total : ${formatCurrency.format(history.totalPrice)}"),
+              Text("Total : }"),
+              // ${formatCurrency.format(history)
             ],
           ),
           const SizedBox(
@@ -71,7 +72,7 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Booking: ${history.orderDate.toDate?.getDate() ?? "-"}",
+                "Booking: ${history.createdAt.toDate?.getDate() ?? "-"}",
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -80,7 +81,7 @@ class HistoryCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                history.orderDate,
+                history.orderTime,
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -93,7 +94,11 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                history.orderName + (history.orderNameCount > 0 ? " +${history.orderNameCount}" : ""),
+                history.orderDetails[0].nama +
+                    "(${history.orderDetails[0].category.nama})" +
+                    (history.orderDetails.length > 1
+                        ? " +${history.orderDetails.length - 1}"
+                        : ""),
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,

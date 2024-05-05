@@ -25,15 +25,23 @@ class AuthRepositoryImpl implements AuthRepository {
   });
   @override
   Future<User> getProfile() async {
-    final res = await request.get(url: ApiPath.profile, isAuth: true);
+    final res = await request.get(
+      url: AuthPath.refreshProfile,
+      isAuth: true,
+      isRefresh: true,
+    );
+    log('$res');
 
-    return User.fromMap(res.data);
+    final data = AuthResponse.fromMap(res.data);
+    await pref.setString(PrefConst.accessToken, data.session.accessToken);
+    await pref.setString(PrefConst.refreshToken, data.session.refreshToken);
+    return data.account;
   }
 
   @override
   Future<User> login({required LoginDTO params}) async {
     final res = await request.post(
-      url: ApiPath.login,
+      url: AuthPath.login,
       body: params.toMap(),
       isAuth: false,
       isRefresh: false,
@@ -46,35 +54,30 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    Future.wait([pref.remove(PrefConst.accessToken), pref.remove(PrefConst.refreshToken), FirebaseMessaging.instance.deleteToken()]);
-  }
-
-  @override
-  Future<void> refreshSession() async {
-    final res = await request.get(url: ApiPath.refreshSession, isAuth: true, isRefresh: true);
-    final data = Session.fromMap(res.data);
-    await pref.setString(PrefConst.accessToken, data.accessToken);
-    await pref.setString(PrefConst.refreshToken, data.refreshToken);
+    Future.wait([
+      pref.remove(PrefConst.accessToken),
+      pref.remove(PrefConst.refreshToken),
+      FirebaseMessaging.instance.deleteToken()
+    ]);
   }
 
   @override
   Future<User> register({required RegisterDTO params}) async {
     final res = await request.post(
-      url: ApiPath.register,
+      url: AuthPath.register,
       body: params.toMap(),
     );
 
-    final data = AuthResponse.fromMap(res.data);
-    await pref.setString(PrefConst.accessToken, data.session.accessToken);
-    await pref.setString(PrefConst.refreshToken, data.session.refreshToken);
-    return data.account;
+    final data = User.fromMap(res.data);
+
+    return data;
   }
 
   @override
   Future<void> sendTokenFirebase({required String token}) async {
     try {
       await request.post(
-        url: ApiPath.sendTokenFirebase,
+        url: AuthPath.tokenFirebase,
         body: {"token": token},
         isAuth: true,
       );
@@ -86,18 +89,20 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<String> verifyOtp({required String otp}) async {
-    final res = await request.post(url: ApiPath.verifyOtp, body: {"otp": otp}, isAuth: true);
+    final res = await request.post(url: AuthPath.confirmOtp(otp), isAuth: true);
     return res.data["message"];
   }
 
   @override
-  Future<void> changePassword({required String oldPassword, required String newPassword}) async {
+  Future<void> changePassword(
+      {required String oldPassword, required String newPassword}) async {
     await request.put(
-      url: ApiPath.changePassword,
+      url: AuthPath.changePassword,
       headers: {
         "Content-Type": "application/json",
       },
-      body: jsonEncode({"old_password": oldPassword, "new_password": newPassword}),
+      body:
+          jsonEncode({"oldPassword": oldPassword, "newPassword": newPassword}),
       isAuth: true,
     );
     return;
@@ -106,7 +111,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User> updateProfile({required UpdateProfileDTO params}) async {
     final req = await request.postWithImage(
-      url: ApiPath.updateProfile,
+      url: AuthPath.editProfile,
       body: params.getBody(),
       bodyImage: params.getProfilePictureMap(),
       isAuth: true,
@@ -115,13 +120,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<String> forgetPassword({required String email, required String otp, required String newPassword}) async {
+  Future<String> forgetPassword(
+      {required String email,
+      required String otp,
+      required String newPassword}) async {
     final req = await request.post(
-        url: ApiPath.submitForgetPassword,
+        url: AuthPath.forgetPassword,
         body: {
           "email": email,
           "otp": otp,
-          "new_password": newPassword,
+          "password": newPassword,
         },
         isAuth: false);
     return req.data["message"] ?? "sukses";
@@ -129,13 +137,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<String> requestForgetPassword({required String email}) async {
-    final req = await request.post(url: ApiPath.requestForgetPasswor, body: {
-      "email": email,
-    });
+    final req = await request.post(url: AuthPath.requestForgetPassword(email));
     return req.data["message"];
   }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImpl(request: ref.read(requestProvider), pref: ref.read(prefProvider));
+  return AuthRepositoryImpl(
+      request: ref.read(requestProvider), pref: ref.read(prefProvider));
 });

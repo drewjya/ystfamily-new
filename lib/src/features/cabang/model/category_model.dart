@@ -34,7 +34,7 @@ class CategoryTreatment {
 
   factory CategoryTreatment.fromMap(Map<String, dynamic> map) {
     return CategoryTreatment(
-      id: map['category_id'] as int,
+      id: map['id'] as int,
       nama: map['nama'] as String,
       description:
           map['description'] != null ? map['description'] as String : null,

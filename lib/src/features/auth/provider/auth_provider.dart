@@ -12,7 +12,6 @@ import 'package:ystfamily/src/features/auth/repository/auth_repository_impl.dart
 class AuthNotifier extends AsyncNotifier<User> {
   @override
   FutureOr<User> build() async {
-    await ref.read(authRepositoryProvider).refreshSession();
     return ref.read(authRepositoryProvider).getProfile();
   }
 

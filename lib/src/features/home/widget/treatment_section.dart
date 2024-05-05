@@ -51,7 +51,8 @@ class TreatmentSection extends HookConsumerWidget {
                         final treatment = data[index];
                         return Center(
                           child: VCard.vertical(
-                              backgroundColor: VColor.appbarBackground.withOpacity(0.7),
+                              backgroundColor:
+                                  VColor.appbarBackground.withOpacity(0.7),
                               height: 80,
                               onTap: () {
                                 CabangRoute(tipe: treatment.nama).push(context);

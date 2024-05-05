@@ -7,7 +7,7 @@ import 'package:ystfamily/src/features/cabang/repository/cabang_repository_impl.
 class CategoryNotifier extends AsyncNotifier<List<CategoryTreatment>> {
   @override
   FutureOr<List<CategoryTreatment>> build() {
-    return ref.read(cabangRepositoryProvider).getCategoryTreatment();
+    return ref.read(cabangRepositoryProvider).getCategory();
   }
 }
 

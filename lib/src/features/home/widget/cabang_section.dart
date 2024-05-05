@@ -41,6 +41,7 @@ class CabangSection extends ConsumerWidget {
               const Spacer(),
               TextButton(
                   onPressed: () {
+                    
                     const CabangRoute(tipe: "all").push(context);
                   },
                   child: const Text("Lihat Semua"))
@@ -51,19 +52,19 @@ class CabangSection extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: ref.watch(cabangProvider(null)).maybeWhen(
-                  orElse: () {
-                    return [const LoadingWidget()];
-                  },
+                children: ref.watch(cabangProvider(2)).when(
                   loading: () {
                     return [const LoadingWidget()];
                   },
                   error: (error, stackTrace) {
-                    return [Text("$error")];
+                    return [
+                      Text(
+                        "$error error",
+                      )
+                    ];
                   },
                   data: (data) {
                     return data
-                        .take(3)
                         .mapIndexed(
                           (index, e) => CabangCard(
                             cabang: e,
@@ -75,21 +76,6 @@ class CabangSection extends ConsumerWidget {
                         .toList();
                   },
                 ),
-
-                // OldCabang.cabangs
-                //     .mapIndexed(
-                //       (e, index) => CabangCard(
-                //         cabang: e,
-                //         start: index != 2,
-                //         onTap: () {
-                //           OrderRoute(
-                //                   tipe: "all",
-                //                   branch: cabangs[index].namaCabang)
-                //               .push(context);
-                //         },
-                //       ),
-                //     )
-                //     .toList(),
               )),
         ],
       ),

@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/core/provider/banner_provider.dart';
 import 'package:ystfamily/src/features/history/view/detail_history_screen.dart';
@@ -76,7 +79,11 @@ class CarouselHome extends ConsumerWidget {
                   aspectRatio: 2,
                   enlargeCenterPage: true,
                 ),
-                items: data.map((e) => ImageSliders(url: e)).toList(),
+                items: data.map((e) {
+                  log(image + e);
+                  final url = image + e;
+                  return ImageSliders(url: url);
+                }).toList(),
               );
             },
             error: (error, stackTrace) {

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/provider/history_provider.dart';
+import 'package:ystfamily/src/features/history/repository/history_repository.dart';
 import 'package:ystfamily/src/features/history/widgets/history_card.dart';
 
 final formatCurrency =
@@ -30,21 +31,21 @@ class HistoryPage extends HookConsumerWidget {
                       );
                     },
                     itemBuilder: (context, index) {
-                      final e = FilterHistory.values[index];
+                      final e = OrderStatus.values[index];
                       return ChoiceChip(
                         label: Text(e.name),
-                        selected: ref.watch(filterProvider).filter == e,
+                        selected: ref.watch(orderStatusProvider) == e,
                         onSelected: ref.watch(historyProvider
                                 .select((value) => value.isLoading))
                             ? null
                             : (value) {
-                                ref
-                                    .read(filterProvider.notifier)
-                                    .changeFilter(filter: e);
+                                ref.read(orderStatusProvider.notifier).update(
+                                      (state) => e,
+                                    );
                               },
                       );
                     },
-                    itemCount: FilterHistory.values.length,
+                    itemCount: OrderStatus.values.length,
                     scrollDirection: Axis.horizontal,
                   ),
                 ),
@@ -81,7 +82,7 @@ class HistoryPage extends HookConsumerWidget {
                             //   RescheduleOrderRoute(id: data[index].orderId).push(context);
                             //   return;
                             // }
-                            DetailHistoryRoute(id: data[index].orderId)
+                            DetailHistoryRoute(id: data[index].id)
                                 .push(context);
                           },
                         );

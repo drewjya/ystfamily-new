@@ -1,4 +1,5 @@
 import 'package:ystfamily/src/core/api/api_exception.dart';
+import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
@@ -19,7 +20,8 @@ class ProfilePage extends HookConsumerWidget {
           if (error is ApiException) {
             message = (error).message;
           }
-          if (message.toLowerCase() == "unauthorized" || message.toLowerCase() == "relogin") {
+          if (message.toLowerCase() == "unauthorized" ||
+              message.toLowerCase() == "relogin") {
             void logout() {
               const LoginRoute().go(context);
             }
@@ -52,11 +54,13 @@ class ProfilePage extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         VCircleImage(
-                          url: user.value?.profilePicture,
+                          url: user.value?.picture == null
+                              ? null
+                              : "$image${user.value?.picture}",
                         ),
                         const Gap(12),
                         Text(
-                          (user.value?.nama ?? "-").toUpperCase(),
+                          (user.value?.name ?? "-").toUpperCase(),
                           style: const TextStyle(
                             color: VColor.primaryTextColor,
                             fontWeight: FontWeight.w500,

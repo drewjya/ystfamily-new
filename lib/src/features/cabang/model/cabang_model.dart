@@ -1,109 +1,98 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
 
 class Cabang {
-  final int cabangId;
-  final String nama;
+  final int id;
   final String alamat;
-  final String? profilePicture;
-  final int totalTreatment;
-  final int? happyHourId;
-  final int? startDay;
-  final String? startTime;
-  final int? endDay;
-  final String? endTime;
+  final String closeHour;
+  final String nama;
+  final String openHour;
   final String phoneNumber;
-
+  final String? picture;
   Cabang({
-    required this.cabangId,
-    required this.nama,
+    required this.id,
     required this.alamat,
-    required this.profilePicture,
-    required this.totalTreatment,
-    required this.happyHourId,
-    required this.startDay,
-    required this.startTime,
-    required this.endDay,
-    required this.endTime,
+    required this.closeHour,
+    required this.nama,
+    required this.openHour,
     required this.phoneNumber,
+    required this.picture,
   });
 
   Cabang copyWith({
-    int? cabangId,
-    String? nama,
+    int? id,
     String? alamat,
-    String? profilePicture,
-    int? totalTreatment,
-    int? happyHourId,
-    int? startDay,
-    String? startTime,
-    int? endDay,
-    String? endTime,
+    String? closeHour,
+    String? nama,
+    String? openHour,
     String? phoneNumber,
+    String? picture,
   }) {
     return Cabang(
-        cabangId: cabangId ?? this.cabangId,
-        nama: nama ?? this.nama,
-        alamat: alamat ?? this.alamat,
-        profilePicture: profilePicture ?? this.profilePicture,
-        totalTreatment: totalTreatment ?? this.totalTreatment,
-        happyHourId: happyHourId ?? this.happyHourId,
-        startDay: startDay ?? this.startDay,
-        startTime: startTime ?? this.startTime,
-        endDay: endDay ?? this.endDay,
-        endTime: endTime ?? this.endTime,
-        phoneNumber: phoneNumber ?? this.phoneNumber);
+      id: id ?? this.id,
+      alamat: alamat ?? this.alamat,
+      closeHour: closeHour ?? this.closeHour,
+      nama: nama ?? this.nama,
+      openHour: openHour ?? this.openHour,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      picture: picture ?? this.picture,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'alamat': alamat,
+      'closeHour': closeHour,
+      'nama': nama,
+      'openHour': openHour,
+      'phoneNumber': phoneNumber,
+      'picture': picture,
+    };
   }
 
   factory Cabang.fromMap(Map<String, dynamic> map) {
     return Cabang(
-      cabangId: map['cabang_id'].toInt() as int,
-      nama: map['nama'] as String,
+      id: map['id'] as int,
       alamat: map['alamat'] as String,
-      profilePicture: map['profile_picture'] as String?,
-      totalTreatment: map['total_treatment'] ?? 0,
-      happyHourId: map['happy_hour_id'] as int?,
-      startDay: map['start_day'] as int?,
-      startTime: map['start_time'] as String?,
-      endDay: map['end_day'] as int?,
-      endTime: map['end_time'] as String?,
-      phoneNumber: map['phone_number'] as String,
+      closeHour: map['closeHour'] as String,
+      nama: map['nama'] as String,
+      openHour: map['openHour'] as String,
+      phoneNumber: map['phoneNumber'] as String,
+      picture: map['picture'] as String?,
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory Cabang.fromJson(String source) =>
+      Cabang.fromMap(json.decode(source) as Map<String, dynamic>);
+
   @override
   String toString() {
-    return 'Cabang(cabangId: $cabangId, nama: $nama, alamat: $alamat, profilePicture: $profilePicture, totalTreatment: $totalTreatment, happyHourId: $happyHourId, startDay: $startDay, startTime: $startTime, endDay: $endDay, endTime: $endTime, phoneNumber: $phoneNumber)';
+    return 'Cabang(id: $id, alamat: $alamat, closeHour: $closeHour, nama: $nama, openHour: $openHour, phoneNumber: $phoneNumber, picture: $picture)';
   }
 
   @override
   bool operator ==(covariant Cabang other) {
     if (identical(this, other)) return true;
 
-    return other.cabangId == cabangId &&
-        other.nama == nama &&
+    return other.id == id &&
         other.alamat == alamat &&
-        other.profilePicture == profilePicture &&
-        other.totalTreatment == totalTreatment &&
-        other.happyHourId == happyHourId &&
-        other.startDay == startDay &&
-        other.startTime == startTime &&
-        other.endDay == endDay &&
-        other.endTime == endTime &&
-        other.phoneNumber == phoneNumber;
+        other.closeHour == closeHour &&
+        other.nama == nama &&
+        other.openHour == openHour &&
+        other.phoneNumber == phoneNumber &&
+        other.picture == picture;
   }
 
   @override
   int get hashCode {
-    return cabangId.hashCode ^
-        nama.hashCode ^
+    return id.hashCode ^
         alamat.hashCode ^
-        profilePicture.hashCode ^
-        totalTreatment.hashCode ^
-        happyHourId.hashCode ^
-        startDay.hashCode ^
-        startTime.hashCode ^
-        endDay.hashCode ^
-        endTime.hashCode ^
-        phoneNumber.hashCode;
+        closeHour.hashCode ^
+        nama.hashCode ^
+        openHour.hashCode ^
+        phoneNumber.hashCode ^
+        picture.hashCode;
   }
 }
