@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:collection/collection.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/common/image_picker.dart';
 import 'package:ystfamily/src/core/core.dart';
-import 'package:ystfamily/src/features/order/model/detail_order.dart';
+import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
 import 'package:ystfamily/src/features/order/order.dart';
 import 'package:ystfamily/src/features/order/provider/detail_order_provider.dart';
 import 'package:ystfamily/src/features/order/provider/order_provider.dart';
@@ -26,9 +27,25 @@ class DetailHistoryScreen extends HookConsumerWidget {
               isLoading.value = false;
               Navigator.pop(context);
             }
+
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Berhasil Kirim Bukti Pembayaran")));
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog.adaptive(
+                title: const Text("Notifikasi"),
+                content: const Text("Bukti Pembayaran Berhasil Diupload"),
+                actions: [
+                  ActionButton(
+                    isFilled: false,
+                    onPressed: () {
+                      const HistoryPageRoute().go(context);
+                    },
+                    text: "Ok",
+                  ),
+                ],
+              ),
+            );
+
             ref.invalidate(detailOrderProvider(id));
           }
         },
@@ -96,11 +113,11 @@ class DetailHistoryScreen extends HookConsumerWidget {
                               children: [
                                 const Text("Status"),
                                 const Spacer(),
-                                Text(data.status),
+                                Text(data.orderStatus.toTitle),
                               ],
                             ),
                             const Gap(8),
-                            ...data.treatments.mapIndexed(
+                            ...data.orderDetail.mapIndexed(
                               (i, e) {
                                 return Column(
                                   children: [
@@ -108,11 +125,11 @@ class DetailHistoryScreen extends HookConsumerWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(child: Text(e.treatmentName)),
+                                        Expanded(child: Text(e.nama)),
                                         Text(formatCurrency.format(e.price))
                                       ],
                                     ),
-                                    if (i != data.treatments.length - 1)
+                                    if (i != data.orderDetail.length - 1)
                                       const Divider()
                                   ],
                                 );
@@ -127,7 +144,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         children: [
                           const Text("Nomor Booking"),
                           const Spacer(),
-                          Text(data.orderNumber)
+                          Text(data.orderId)
                         ],
                       );
                     }
@@ -137,8 +154,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                           const Text("Tanggal Booking"),
                           const Spacer(),
                           Text(
-                            DateTime.parse(data.bookingTime)
-                                .formatTimePesanan(),
+                            DateTime.parse(data.orderTime).formatTimePesanan(),
                           )
                         ],
                       );
@@ -148,12 +164,10 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         children: [
                           const Text("Tanggal Konfirmasi"),
                           const Spacer(),
-                          Text(
-                            data.confirmationDate == null
-                                ? "Menunggu Konfirmasi"
-                                : DateTime.parse(data.confirmationDate!)
-                                    .formatTimePesanan(),
-                          )
+                          Text(data.confirmationTime == null
+                              ? "Menunggu Konfirmasi"
+                              : DateTime.parse(data.confirmationTime!)
+                                  .formatTimePesanan())
                         ],
                       );
                     }
@@ -164,7 +178,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                           const Text("Durasi Treatment"),
                           const Spacer(),
                           Text(
-                            data.treatments.time,
+                            "${data.durasi} menit",
                           ),
                         ],
                       );
@@ -176,7 +190,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                             children: [
                               const Text("Cabang"),
                               const Spacer(),
-                              Text(data.cabangNama),
+                              Text(data.cabang),
                             ],
                           ),
                           const Gap(12),
@@ -184,7 +198,8 @@ class DetailHistoryScreen extends HookConsumerWidget {
                             children: [
                               const Text("Therapist"),
                               const Spacer(),
-                              Text(data.therapistNama),
+                              Text(
+                                  "${data.therapist ?? ""} - ${data.therapistGender}"),
                             ],
                           ),
                         ],
@@ -195,7 +210,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         children: [
                           const Text("Tanggal Treatment"),
                           const Spacer(),
-                          Text(data.tanggalTreatment),
+                          Text(data.orderTime.toDate?.getDate() ?? "-"),
                         ],
                       );
                     }
@@ -205,7 +220,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         children: [
                           const Text("Waktu Treatment"),
                           const Spacer(),
-                          Text("${data.orderStartTime} - ${data.orderEndTime}"),
+                          Text(data.orderTime.toDate?.getHour() ?? "-"),
                         ],
                       );
                     }
@@ -214,8 +229,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         children: [
                           const Text("Total Harga"),
                           const Spacer(),
-                          Text(formatCurrency
-                              .format(data.treatments.map((e) => e.price).sum)),
+                          Text(formatCurrency.format(data.totalPrice)),
                         ],
                       );
                     }
@@ -227,7 +241,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                             children: [
                               const Text("Bukti Pembayaran"),
                               const Spacer(),
-                              if (data.buktiBayar == null)
+                              if (data.picture == null)
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -254,8 +268,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                                           ref
                                               .read(orderProvider.notifier)
                                               .postBuktiOrder(
-                                                  orderId: data.orderId,
-                                                  file: file);
+                                                  orderId: data.id, file: file);
                                           return;
                                         }
                                         scaffolMes.showSnackBar(const SnackBar(
@@ -270,14 +283,14 @@ class DetailHistoryScreen extends HookConsumerWidget {
                             ],
                           ),
                           const Gap(8),
-                          if (data.buktiBayar != null)
+                          if (data.picture != null)
                             InkWell(
                               onTap: () {
                                 showImageInteractive(
-                                    context, "${data.buktiBayar}");
+                                    context, "$image${data.picture}");
                               },
                               child: Image.network(
-                                "${data.buktiBayar}",
+                                "$image${data.picture}",
                                 height: 120,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {

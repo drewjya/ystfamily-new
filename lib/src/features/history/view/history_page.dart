@@ -33,7 +33,7 @@ class HistoryPage extends HookConsumerWidget {
                     itemBuilder: (context, index) {
                       final e = OrderStatus.values[index];
                       return ChoiceChip(
-                        label: Text(e.name),
+                        label: Text(e.value.toTitle),
                         selected: ref.watch(orderStatusProvider) == e,
                         onSelected: ref.watch(historyProvider
                                 .select((value) => value.isLoading))
@@ -78,10 +78,6 @@ class HistoryPage extends HookConsumerWidget {
                         return HistoryCard(
                           history: data[index],
                           onTap: () {
-                            // if (FilterHistory.reshedule == selected.value) {
-                            //   RescheduleOrderRoute(id: data[index].orderId).push(context);
-                            //   return;
-                            // }
                             DetailHistoryRoute(id: data[index].id)
                                 .push(context);
                           },

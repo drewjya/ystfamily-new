@@ -41,4 +41,8 @@ extension DateTimeX on DateTime {
 
 extension StringDate on String {
   DateTime? get toDate => DateTime.tryParse(this);
+
+  String get toTitle {
+    return this[0].toUpperCase() + substring(1).toLowerCase();
+  }
 }

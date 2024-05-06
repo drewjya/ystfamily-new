@@ -1,5 +1,6 @@
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/model/history_order.dart';
+import 'package:ystfamily/src/features/order/order.dart';
 
 class HistoryCard extends StatelessWidget {
   final HistoryOrder history;
@@ -53,7 +54,7 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                "history.cabangNama",
+                history.cabang,
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -61,8 +62,7 @@ class HistoryCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Text("Total : }"),
-              // ${formatCurrency.format(history)
+              Text("Total : ${formatCurrency.format(history.totalPrice)}"),
             ],
           ),
           const SizedBox(
@@ -72,7 +72,7 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                "Booking: ${history.createdAt.toDate?.getDate() ?? "-"}",
+                "Booking: ${history.orderTime.toDate?.formatTimePesanan() ?? "-"}",
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -81,7 +81,7 @@ class HistoryCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                history.orderTime,
+                history.createdAt.toDate?.getDate() ?? '-',
                 style: const TextStyle(
                   color: VColor.primaryTextColor,
                   fontSize: 14,
@@ -94,10 +94,9 @@ class HistoryCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                history.orderDetails[0].nama +
-                    "(${history.orderDetails[0].category.nama})" +
-                    (history.orderDetails.length > 1
-                        ? " +${history.orderDetails.length - 1}"
+                history.orderName +
+                    (history.countOrder > 1
+                        ? " +${history.countOrder - 1}"
                         : ""),
                 style: const TextStyle(
                   color: VColor.primaryTextColor,

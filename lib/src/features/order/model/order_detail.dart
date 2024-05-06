@@ -1,67 +1,114 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
 class OrderDetail {
-  final int orderId;
-  final String cabangNama;
-  final String tanggalTreatment;
-  final String orderStartTime;
-  final String orderEndTime;
-  final String therapistNama;
-  final String? buktiBayar;
-  final String status;
-  final String bookingTime;
-  final List<OrderTreatment> treatments;
-  final String? confirmationDate;
+  final String orderId;
+  final int id;
+  final String orderTime;
+  final String orderStatus;
+  final String guestGender;
+  final String therapistGender;
+  final String? therapist;
+  final String cabang;
+  final int cabangId;
+  final int durasi;
+  final UserSimple user;
+  final List<OrderDetailData> orderDetail;
+  final int totalPrice;
+  final String createdAt;
+  final String? picture;
+  final String? confirmationTime;
   OrderDetail({
+    required this.createdAt,
+    this.picture,
+    this.confirmationTime,
     required this.orderId,
-    required this.cabangNama,
-    required this.tanggalTreatment,
-    required this.orderStartTime,
-    required this.orderEndTime,
-    required this.therapistNama,
-    this.buktiBayar,
-    required this.status,
-    required this.bookingTime,
-    required this.treatments,
-    this.confirmationDate,
+    this.therapist,
+    required this.id,
+    required this.orderTime,
+    required this.orderStatus,
+    required this.guestGender,
+    required this.therapistGender,
+    required this.cabang,
+    required this.cabangId,
+    required this.durasi,
+    required this.user,
+    required this.orderDetail,
+    required this.totalPrice,
   });
 
   OrderDetail copyWith({
-    int? orderId,
-    String? cabangNama,
-    String? tanggalTreatment,
-    String? orderStartTime,
-    String? orderEndTime,
-    String? therapistNama,
-    String? buktiBayar,
-    String? status,
-    String? bookingTime,
-    List<OrderTreatment>? treatments,
-    String? confirmationDate,
+    String? createdAt,
+    String? picture,
+    String? confirmationTime,
+    String? orderId,
+    int? id,
+    String? orderTime,
+    String? orderStatus,
+    String? guestGender,
+    String? therapistGender,
+    String? cabang,
+    int? cabangId,
+    int? durasi,
+    String? therapist,
+    UserSimple? user,
+    List<OrderDetailData>? orderDetail,
+    int? totalPrice,
   }) {
     return OrderDetail(
+      createdAt: createdAt ?? this.createdAt,
+      picture: picture ?? this.picture,
+      confirmationTime: confirmationTime ?? this.confirmationTime,
+      therapist: therapist ?? this.therapist,
       orderId: orderId ?? this.orderId,
-      cabangNama: cabangNama ?? this.cabangNama,
-      tanggalTreatment: tanggalTreatment ?? this.tanggalTreatment,
-      orderStartTime: orderStartTime ?? this.orderStartTime,
-      orderEndTime: orderEndTime ?? this.orderEndTime,
-      therapistNama: therapistNama ?? this.therapistNama,
-      buktiBayar: buktiBayar ?? this.buktiBayar,
-      status: status ?? this.status,
-      bookingTime: bookingTime ?? this.bookingTime,
-      treatments: treatments ?? this.treatments,
-      confirmationDate: confirmationDate ?? this.confirmationDate,
+      id: id ?? this.id,
+      orderTime: orderTime ?? this.orderTime,
+      orderStatus: orderStatus ?? this.orderStatus,
+      guestGender: guestGender ?? this.guestGender,
+      therapistGender: therapistGender ?? this.therapistGender,
+      cabang: cabang ?? this.cabang,
+      cabangId: cabangId ?? this.cabangId,
+      durasi: durasi ?? this.durasi,
+      user: user ?? this.user,
+      orderDetail: orderDetail ?? this.orderDetail,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 
-  factory OrderDetail.fromJson(String source) => OrderDetail.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderDetail.fromMap(Map<String, dynamic> map) {
+    return OrderDetail(
+      createdAt: map['createdAt'] as String,
+      confirmationTime: map['confirmationTime'] as String?,
+      picture: map['picture'] as String?,
+      orderId: map['orderId'] as String,
+      id: map['id'] as int,
+      orderTime: map['orderTime'] as String,
+      orderStatus: map['orderStatus'] as String,
+      guestGender: map['guestGender'] as String,
+      therapistGender: map['therapistGender'] as String,
+      cabang: map['cabang'] as String,
+      therapist: map['therapist'],
+      cabangId: map['cabangId'] as int,
+      durasi: map['durasi'] as int,
+      user: UserSimple.fromMap(map['user'] as Map<String, dynamic>),
+      orderDetail: List<OrderDetailData>.from(
+        (map['orderDetail'] as List)
+            .cast<Map<String, dynamic>>()
+            .map<OrderDetailData>(
+              (x) => OrderDetailData.fromMap(x),
+            ),
+      ),
+      totalPrice: map['totalPrice'] as int,
+    );
+  }
+
+  factory OrderDetail.fromJson(String source) =>
+      OrderDetail.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'OrderDetail(orderId: $orderId, cabangNama: $cabangNama, tanggalTreatment: $tanggalTreatment, orderStartTime: $orderStartTime, orderEndTime: $orderEndTime, therapistNama: $therapistNama, buktiBayar: $buktiBayar, status: $status, bookingTime: $bookingTime, treatments: $treatments, confirmationDate: $confirmationDate)';
+    return 'OrderDetail(orderId: $orderId, id: $id, orderTime: $orderTime, orderStatus: $orderStatus, guestGender: $guestGender, therapistGender: $therapistGender, cabang: $cabang, cabangId: $cabangId, durasi: $durasi, user: $user, orderDetail: $orderDetail, totalPrice: $totalPrice, createdAt: $createdAt, picture: $picture, confirmationTime: $confirmationTime)';
   }
 
   @override
@@ -69,120 +116,157 @@ class OrderDetail {
     if (identical(this, other)) return true;
 
     return other.orderId == orderId &&
-        other.cabangNama == cabangNama &&
-        other.tanggalTreatment == tanggalTreatment &&
-        other.orderStartTime == orderStartTime &&
-        other.orderEndTime == orderEndTime &&
-        other.therapistNama == therapistNama &&
-        other.buktiBayar == buktiBayar &&
-        other.status == status &&
-        other.bookingTime == bookingTime &&
-        listEquals(other.treatments, treatments) &&
-        other.confirmationDate == confirmationDate;
+        other.id == id &&
+        other.confirmationTime == confirmationTime &&
+        other.picture == picture &&
+        other.createdAt == createdAt &&
+        other.orderTime == orderTime &&
+        other.orderStatus == orderStatus &&
+        other.guestGender == guestGender &&
+        other.therapistGender == therapistGender &&
+        other.cabang == cabang &&
+        other.cabangId == cabangId &&
+        other.durasi == durasi &&
+        other.user == user &&
+        listEquals(other.orderDetail, orderDetail) &&
+        other.totalPrice == totalPrice;
   }
 
   @override
   int get hashCode {
     return orderId.hashCode ^
-        cabangNama.hashCode ^
-        tanggalTreatment.hashCode ^
-        orderStartTime.hashCode ^
-        orderEndTime.hashCode ^
-        therapistNama.hashCode ^
-        buktiBayar.hashCode ^
-        status.hashCode ^
-        bookingTime.hashCode ^
-        treatments.hashCode ^
-        confirmationDate.hashCode;
+        id.hashCode ^
+        orderTime.hashCode ^
+        orderStatus.hashCode ^
+        guestGender.hashCode ^
+        therapistGender.hashCode ^
+        cabang.hashCode ^
+        cabangId.hashCode ^
+        durasi.hashCode ^
+        confirmationTime.hashCode ^
+        picture.hashCode ^
+        createdAt.hashCode ^
+        user.hashCode ^
+        orderDetail.hashCode ^
+        totalPrice.hashCode;
   }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'orderId': orderId,
-      'cabangNama': cabangNama,
-      'tanggalTreatment': tanggalTreatment,
-      'orderStartTime': orderStartTime,
-      'orderEndTime': orderEndTime,
-      'therapistNama': therapistNama,
-      'buktiBayar': buktiBayar,
-      'status': status,
-      'bookingTime': bookingTime,
-      'treatments': treatments.map((x) => x.toMap()).toList(),
-      'confirmationDate': confirmationDate,
-    };
-  }
-
-  factory OrderDetail.fromMap(Map<String, dynamic> map) {
-    return OrderDetail(
-      orderId: map['order_id'].toInt() as int,
-      cabangNama: map['cabang_nama'] as String,
-      tanggalTreatment: map['tanggal_treatment'] as String,
-      orderStartTime: map['order_start_time'] as String,
-      orderEndTime: map['order_end_time'] as String,
-      therapistNama: map['therapist_nama'] as String,
-      buktiBayar: map['bukti_bayar'],
-      status: map['status'] as String,
-      bookingTime: map['booking_time'] as String,
-      treatments: (map['treatments'] as List).map((x) => OrderTreatment.fromMap(x as Map<String, dynamic>)).toList(),
-      confirmationDate: map['confirmation_date'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
 }
 
-class OrderTreatment {
-  final int durasi;
-  final int price;
-  final String treatmentName;
-  OrderTreatment({
-    required this.durasi,
-    required this.price,
-    required this.treatmentName,
+class UserSimple {
+  final String name;
+  final String email;
+  final int id;
+  final String? gender;
+  UserSimple({
+    required this.name,
+    required this.email,
+    required this.id,
+    required this.gender,
   });
 
-  OrderTreatment copyWith({
-    int? durasi,
-    int? price,
-    String? treatmentName,
+  UserSimple copyWith({
+    String? name,
+    String? email,
+    int? id,
+    String? gender,
   }) {
-    return OrderTreatment(
-      durasi: durasi ?? this.durasi,
+    return UserSimple(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      id: id ?? this.id,
+      gender: gender ?? this.gender,
+    );
+  }
+
+  factory UserSimple.fromMap(Map<String, dynamic> map) {
+    return UserSimple(
+      name: map['name'] as String,
+      email: map['email'] as String,
+      id: map['id'] as int,
+      gender: map["gender"],
+    );
+  }
+
+  factory UserSimple.fromJson(String source) =>
+      UserSimple.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'UserSimple(name: $name, email: $email, id: $id, gender: $gender)';
+  }
+
+  @override
+  bool operator ==(covariant UserSimple other) {
+    if (identical(this, other)) return true;
+
+    return other.name == name &&
+        other.email == email &&
+        other.id == id &&
+        other.gender == gender;
+  }
+
+  @override
+  int get hashCode {
+    return name.hashCode ^ email.hashCode ^ id.hashCode ^ gender.hashCode;
+  }
+}
+
+class OrderDetailData {
+  final int duration;
+  final String nama;
+  final int price;
+  OrderDetailData({
+    required this.duration,
+    required this.nama,
+    required this.price,
+  });
+
+  OrderDetailData copyWith({
+    int? duration,
+    String? nama,
+    int? price,
+  }) {
+    return OrderDetailData(
+      duration: duration ?? this.duration,
+      nama: nama ?? this.nama,
       price: price ?? this.price,
-      treatmentName: treatmentName ?? this.treatmentName,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'durasi': durasi,
+      'duration': duration,
+      'nama': nama,
       'price': price,
-      'treatmentName': treatmentName,
     };
   }
 
-  factory OrderTreatment.fromMap(Map<String, dynamic> map) {
-    return OrderTreatment(
-      durasi: map['durasi'].toInt() as int,
-      price: map['price'].toInt() as int,
-      treatmentName: map['treatment_name'] as String,
+  factory OrderDetailData.fromMap(Map<String, dynamic> map) {
+    return OrderDetailData(
+      duration: map['duration'] as int,
+      nama: map['nama'] as String,
+      price: map['price'] as int,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory OrderTreatment.fromJson(String source) => OrderTreatment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderDetailData.fromJson(String source) =>
+      OrderDetailData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'OrderTreatment(durasi: $durasi, price: $price, treatment_name: $treatmentName)';
+  String toString() =>
+      'OrderDetailData(duration: $duration, nama: $nama, price: $price)';
 
   @override
-  bool operator ==(covariant OrderTreatment other) {
+  bool operator ==(covariant OrderDetailData other) {
     if (identical(this, other)) return true;
 
-    return other.durasi == durasi && other.price == price && other.treatmentName == treatmentName;
+    return other.duration == duration &&
+        other.nama == nama &&
+        other.price == price;
   }
 
   @override
-  int get hashCode => durasi.hashCode ^ price.hashCode ^ treatmentName.hashCode;
+  int get hashCode => duration.hashCode ^ nama.hashCode ^ price.hashCode;
 }

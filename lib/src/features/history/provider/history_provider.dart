@@ -6,7 +6,7 @@ import 'package:ystfamily/src/features/history/repository/history_repository.dar
 import 'package:ystfamily/src/features/history/repository/history_repository_impl.dart';
 
 final orderStatusProvider = StateProvider<OrderStatus>((ref) {
-  return OrderStatus.confirmed;
+  return OrderStatus.pending;
 });
 
 class HistoryNotifier extends AsyncNotifier<List<HistoryOrder>> {

@@ -87,7 +87,8 @@ class OrderDetail {
     );
   }
 
-  factory OrderDetail.fromJson(String source) => OrderDetail.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderDetail.fromJson(String source) =>
+      OrderDetail.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -159,7 +160,9 @@ class OrderDetail {
       buktiBayar: map['bukti_bayar'],
       status: map['status'] as String,
       bookingTime: map['booking_time'] as String,
-      treatments: (map['treatments'] as List).map((x) => OrderTreatment.fromMap(x as Map<String, dynamic>)).toList(),
+      treatments: (map['treatments'] as List)
+          .map((x) => OrderTreatment.fromMap(x as Map<String, dynamic>))
+          .toList(),
       confirmationDate: map['confirmation_date'],
     );
   }
@@ -207,16 +210,20 @@ class OrderTreatment {
 
   String toJson() => json.encode(toMap());
 
-  factory OrderTreatment.fromJson(String source) => OrderTreatment.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderTreatment.fromJson(String source) =>
+      OrderTreatment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'OrderTreatment(durasi: $durasi, price: $price, treatment_name: $treatmentName)';
+  String toString() =>
+      'OrderTreatment(durasi: $durasi, price: $price, treatment_name: $treatmentName)';
 
   @override
   bool operator ==(covariant OrderTreatment other) {
     if (identical(this, other)) return true;
 
-    return other.durasi == durasi && other.price == price && other.treatmentName == treatmentName;
+    return other.durasi == durasi &&
+        other.price == price &&
+        other.treatmentName == treatmentName;
   }
 
   @override

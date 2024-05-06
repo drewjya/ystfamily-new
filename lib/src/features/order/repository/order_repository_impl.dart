@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/api/api_request.dart';
-import 'package:ystfamily/src/features/order/model/detail_order.dart';
+import 'package:ystfamily/src/features/order/model/order_detail.dart';
 import 'package:ystfamily/src/features/order/model/order_dto.dart';
 import 'package:ystfamily/src/features/order/model/therapist.dart';
 import 'package:ystfamily/src/features/order/repository/order_repository.dart';
@@ -45,7 +45,7 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<OrderDetail> getDetailOrder({required int orderId}) async {
     final res = await request.get(
-        url: ApiPath.orderDetail(orderId), isAuth: true, isRefresh: false);
+        url: OrderPath.orderDetail(orderId), isAuth: true, isRefresh: false);
     return OrderDetail.fromMap(res.data);
   }
 
@@ -53,9 +53,8 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<String> postBuktiPembayaranMobile(
       {required int orderId, required XFile file}) async {
     final res = await request.postWithImage(
-        url: ApiPath.orderInsertBukti,
-        body: {"order_id": '$orderId'},
-        bodyImage: {"bukti_transfer": file},
+        url: OrderPath.orderInsertBukti(orderId),
+        bodyImage: {"file": file},
         isAuth: true,
         isRefresh: false);
     return '${res.data}';
