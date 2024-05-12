@@ -11,6 +11,7 @@ import 'package:ystfamily/src/core/api/firebase/push_notification.dart';
 import 'package:ystfamily/src/core/api/firebase/push_notification_impl.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/core/provider/pref_provider.dart';
+import 'package:ystfamily/src/core/widgets/lifecycle_manager.dart';
 
 final sl = GetIt.instance;
 
@@ -57,15 +58,18 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: "YST Family",
-      scaffoldMessengerKey: snackbarKey,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: VColor.primaryBackground),
-        useMaterial3: true,
+    return LifecycleManager(
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: "YST Family",
+        scaffoldMessengerKey: snackbarKey,
+        theme: ThemeData(
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: VColor.primaryBackground),
+          useMaterial3: true,
+        ),
+        routerConfig: _router,
       ),
-      routerConfig: _router,
     );
   }
 }

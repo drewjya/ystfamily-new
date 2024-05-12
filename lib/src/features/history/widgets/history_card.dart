@@ -93,16 +93,35 @@ class HistoryCard extends StatelessWidget {
           const Gap(4),
           Row(
             children: [
-              Text(
-                history.orderName +
-                    (history.countOrder > 1
-                        ? " +${history.countOrder - 1}"
-                        : ""),
-                style: const TextStyle(
-                  color: VColor.primaryTextColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300,
-                ),
+              Row(
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 180),
+                    child: Text(
+                      history.orderName,
+                      style: const TextStyle(
+                        color: VColor.primaryTextColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (history.countOrder > 1) ...[
+                    Gap(1),
+                    Text(
+                      (history.countOrder > 1
+                          ? " +${history.countOrder - 1}"
+                          : ""),
+                      style: const TextStyle(
+                        color: VColor.primaryTextColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ]
+                ],
               ),
               const Spacer(),
               const Text(

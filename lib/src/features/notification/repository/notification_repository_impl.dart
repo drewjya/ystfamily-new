@@ -11,7 +11,7 @@ class INotificationRepository implements NotificationRepository {
   });
   @override
   Future<List<NotificationM>> getNotificationList({required int limit, required int offset}) async {
-    final res = await request.get(url: ApiPath.notificationList(limit, offset), isAuth: true);
+    final res = await request.get(url: NotificationPath.notificationList, isAuth: true);
     return (res.data as List).cast<Map<String, dynamic>>().map((e) => NotificationM.fromMap(e)).toList();
   }
 }

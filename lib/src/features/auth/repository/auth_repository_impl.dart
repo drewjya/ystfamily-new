@@ -113,6 +113,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final req = await request.postWithImage(
       url: AuthPath.editProfile,
       body: params.getBody(),
+      mode: Mode.put,
       bodyImage: params.getProfilePictureMap(),
       isAuth: true,
     );
@@ -139,6 +140,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> requestForgetPassword({required String email}) async {
     final req = await request.post(url: AuthPath.requestForgetPassword(email));
     return req.data["message"];
+  }
+
+  @override
+  Future<bool> deleteAccount() async {
+    final req = await request.delete(url: AuthPath.deleteAccount, isAuth: true);
+    return req.data != null;
   }
 }
 

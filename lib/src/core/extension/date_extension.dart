@@ -45,4 +45,12 @@ extension StringDate on String {
   String get toTitle {
     return this[0].toUpperCase() + substring(1).toLowerCase();
   }
+
+  String get date {
+    return DateFormat("dd MMM yyyy").format(DateTime.parse(this));
+  }
+
+  String get getHour {
+    return DateFormat("HH:mm:ss").format(DateTime.parse(this));
+  }
 }

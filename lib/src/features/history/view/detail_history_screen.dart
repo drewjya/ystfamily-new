@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import "package:cached_network_image/cached_network_image.dart";
 import 'package:collection/collection.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ystfamily/src/core/api/api_path.dart';
@@ -264,7 +265,18 @@ class DetailHistoryScreen extends HookConsumerWidget {
                                             .read(pickProvider)
                                             .pickImageMobile(
                                                 source: ImageSource.gallery);
+
                                         if (file != null) {
+                                          final size =
+                                              await getFileSize(file.path, 2);
+                                          final sizeArray = size.split(" ");
+                                          if (sizeArray[1] != "KB") {
+                                            scaffolMes.showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Ukuran File Harus Kurang Dari 1 MB")));
+                                            return;
+                                          }
+
                                           ref
                                               .read(orderProvider.notifier)
                                               .postBuktiOrder(
@@ -289,30 +301,18 @@ class DetailHistoryScreen extends HookConsumerWidget {
                                 showImageInteractive(
                                     context, "$image${data.picture}");
                               },
-                              child: Image.network(
-                                "$image${data.picture}",
-                                height: 120,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress?.cumulativeBytesLoaded !=
-                                      loadingProgress?.expectedTotalBytes) {
-                                    return Container(
-                                      height: 120,
-                                      color: VColor.primaryBackground,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: VColor.primaryTextColor,
-                                          value: (loadingProgress
-                                                      ?.cumulativeBytesLoaded ??
-                                                  0) /
-                                              (loadingProgress
-                                                      ?.expectedTotalBytes ??
-                                                  1),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return child;
+                              child: CachedNetworkImage(
+                                imageUrl: "$image${data.picture}",
+                                height: 240,
+                                progressIndicatorBuilder:
+                                    (context, url, progress) {
+                                  return Center(
+                                    child: CircularProgressIndicator.adaptive(
+                                      value: progress.progress,
+                                      valueColor: const AlwaysStoppedAnimation(
+                                          Colors.white),
+                                    ),
+                                  );
                                 },
                               ),
                             ),

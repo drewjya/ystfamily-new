@@ -6,36 +6,6 @@ const baseUrl = 'https://api.ystfamily.com';
 const api = '$baseUrl/api';
 const image = '$baseUrl/img/';
 
-class ApiPath {
-  ApiPath();
-
-  static final login = '$api$api/auth/login';
-  static final register = '$api$api/auth/register';
-  static final verifyOtp = '$api$api/auth/verify-otp';
-  static final changePassword = '$api$api/auth/change-password';
-  static final submitForgetPassword = '$api$api/auth/forget-password';
-  static final requestForgetPasswor = '$api$api/auth/request-forget-password';
-  static final profile = '$api$api/auth/profile';
-  static final updateProfile = '$api$api/auth/update-profile';
-
-  static final refreshSession = '$api$api/auth/refresh';
-  static final sendTokenFirebase = '$api$api/auth/set-last-token';
-
-  static final banner = '$api$api/banner';
-  static final cabang = '$api$api/mobile/cabang?category_id=';
-  static final category = '$api$api/category';
-  static final orderInsert = '$api$api/order/insert';
-  static final orderInsertBukti = '$api$api/order/bukti-transfer';
-  static String orderHistory(int status, int limit, int offset) =>
-      '$api$api/order/history/$status?limit=$limit&offset=$offset';
-  static String orderDetail(int orderId) => '$api$api/order/detail/$orderId';
-  static final therapist = '$api$api/mobile/therapist';
-
-  static String notificationList(int limit, int offset) =>
-      '$api$api/notification/list?limit=$limit&offset=$offset';
-  static final notificaitonCount = '$api$api/notification/count';
-}
-
 class AuthPath {
   static const login = '$api/auth/login';
   static const register = '$api/auth/register';
@@ -47,6 +17,7 @@ class AuthPath {
       '$api/auth/request-forget-password/$email';
   static const editProfile = '$api/auth/profile';
   static const tokenFirebase = '$api/auth/token';
+  static const deleteAccount = '$api/auth';
 }
 
 class BannerPath {
@@ -67,10 +38,16 @@ class CabangPath {
 }
 
 class OrderPath {
-  static orderHistory(OrderStatus status) =>
-      '$api/order?status=${status.value}';
+  static orderHistory(OrderStatus status) {
+    if (status == OrderStatus.all) {
+      return '$api/order';
+    }
+    return '$api/order?status=${status.value}';
+  }
+
   static orderDetail(int orderId) => '$api/order/$orderId';
   static const orderInsert = '$api/order';
+  static const previewOrder = '$api/order/preview';
   static orderInsertBukti(int orderId) => '$api/order/buktiBayar/$orderId';
 }
 
@@ -85,8 +62,10 @@ class TherapistPath {
           required int cabangId}) =>
       '$api/therapist/timeslot/$cabangId?date=$date&therapistId=${therapistId == null ? '' : '$therapistId'}';
   static queryTherapist(
-          {required int treatmentId,
+          {required String gender,
           required String namaTherapist,
           required int cabangId}) =>
-      '$api/therapist/query?name=$namaTherapist&cabangId=$cabangId&treatmentId=$treatmentId';
+      '$api/therapist/query?name=$namaTherapist&cabangId=$cabangId&gender=$gender';
+
+  static const therapistDetail = "$api/therapist/";
 }

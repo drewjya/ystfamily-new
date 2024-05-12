@@ -6,6 +6,7 @@ abstract class HistoryRepository {
 }
 
 enum OrderStatus {
+  all(value: "ALL"),
   pending(value: "PENDING"),
   confirmed(value: "CONFIRMED"),
   ongoing(value: "ONGOING"),

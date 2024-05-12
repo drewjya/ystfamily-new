@@ -1,15 +1,30 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ystfamily/firebase_options.dart';
 import 'package:ystfamily/main.dart';
 import 'package:ystfamily/src/core/api/firebase/push_notification.dart';
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/core/provider/pref_const.dart';
+
+String getNotificationTitle({String? value}) {
+  if (value == "webinar") {
+    return "webinar";
+  } else if (value == "Top Up") {
+    return "topup";
+  } else if (value == null ? false : value.toLowerCase().contains("webinar")) {
+    return "webinar";
+  } else {
+    return "topup";
+  }
+}
 
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {
@@ -129,7 +144,7 @@ class IPushNotification implements PushNotification {
           notificationTitle = remoteNotification.title ?? "Saham Rakyat";
           notificationBody = remoteNotification.body;
           payload = {
-            "type": remoteNotification.title == 'Top Up' ? "topup" : "webinar",
+            "type": getNotificationTitle(value: remoteNotification.title),
             "data": message.data,
             "isFromBackground": isFromBackground,
           };
@@ -180,6 +195,9 @@ class IPushNotification implements PushNotification {
 
     log('Notif Title => $notificationTitle, Body => $notificationBody');
     if (notificationTitle != null && notificationBody != null) {
+      final sharedPreferences = await SharedPreferences.getInstance();
+      await sharedPreferences.setString(
+          PrefConst.latestNotification, jsonEncode(payload));
       List<DarwinNotificationAttachment>? iosNotificationAttachments =
           notificationBanner == null ? null : List.empty(growable: true);
       BigPictureStyleInformation? androidNotificationStyle;
@@ -200,7 +218,18 @@ class IPushNotification implements PushNotification {
       }
 
       // condition to avoid duplicate notification by matching current state
+      final currentState = sharedPreferences.getString('appState');
+      log("$currentState Current State");
+      if (currentState != null &&
+          [AppLifecycleState.inactive, AppLifecycleState.paused]
+              .any((element) => '$element' == currentState)) {
+        return;
+      }
 
+      if (Platform.isIOS &&
+          currentState == AppLifecycleState.resumed.toString()) {
+        return;
+      }
       final androidChannel = getAndroidChannel();
       flutterLocalNotificationsPlugin.show(
         remoteNotification.hashCode,

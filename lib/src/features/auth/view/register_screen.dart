@@ -4,8 +4,8 @@ import 'package:ystfamily/src/features/auth/model/dto/register_dto.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 
 enum Gender {
-  laki("Laki-laki", 'male'),
-  perempuan("Perempuan", 'female');
+  laki("Laki-laki", 'MALE'),
+  perempuan("Perempuan", 'FEMALE');
 
   final String value;
   final String nama;
@@ -101,7 +101,9 @@ class RegisterScreen extends HookConsumerWidget {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      return value != null && value.isNotEmpty ? null : "Email tidak valid";
+                      return value != null && value.isNotEmpty
+                          ? null
+                          : "Email tidak valid";
                     },
                     decoration: inputStyle.copyWith(
                       labelText: "Email",
@@ -124,7 +126,8 @@ class RegisterScreen extends HookConsumerWidget {
                       return null;
                     },
                     controller: phoneNumber,
-                    keyboardType: const TextInputType.numberWithOptions(signed: true),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(signed: true),
                     decoration: inputStyle.copyWith(
                       labelText: "No. Telp",
                     ),
@@ -136,7 +139,9 @@ class RegisterScreen extends HookConsumerWidget {
                       labelText: "Nama Lengkap",
                     ),
                     validator: (value) {
-                      return value != null && value.isNotEmpty ? null : "Nama tidak boleh kosong";
+                      return value != null && value.isNotEmpty
+                          ? null
+                          : "Nama tidak boleh kosong";
                     },
                   ),
                   const Gap(12),
@@ -180,12 +185,16 @@ class RegisterScreen extends HookConsumerWidget {
                                 child: child,
                               );
                             },
-                            child: isSecure.value ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                            child: isSecure.value
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           )),
                     ),
                     obscureText: isSecure.value,
                     validator: (value) {
-                      return value != null && value.isNotEmpty ? null : "Kata kunci tidak boleh kosong";
+                      return value != null && value.isNotEmpty
+                          ? null
+                          : "Kata kunci tidak boleh kosong";
                     },
                   ),
                   const Gap(12),
@@ -207,11 +216,15 @@ class RegisterScreen extends HookConsumerWidget {
                                 child: child,
                               );
                             },
-                            child: isCopySecure.value ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                            child: isCopySecure.value
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           )),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) return "Kata kunci tidak boleh kosong";
+                      if (value == null || value.isEmpty) {
+                        return "Kata kunci tidak boleh kosong";
+                      }
                       if (value != passwordController.text) {
                         return "Kata kunci tidak sama";
                       }
@@ -220,7 +233,8 @@ class RegisterScreen extends HookConsumerWidget {
                   ),
                   const Gap(24),
                   VCard.horizontal(
-                    onTap: ref.watch(authProvider.select((value) => value.isLoading))
+                    onTap: ref.watch(
+                            authProvider.select((value) => value.isLoading))
                         ? null
                         : () {
                             if (selectedValue.value == null) {
@@ -237,7 +251,10 @@ class RegisterScreen extends HookConsumerWidget {
                                       email: emailController.text,
                                       password: passwordController.text,
                                       name: namaController.text,
-                                      phoneNumber: phoneNumber.value.text.isEmpty ? null : phoneNumber.value.text,
+                                      phoneNumber:
+                                          phoneNumber.value.text.isEmpty
+                                              ? null
+                                              : phoneNumber.value.text,
                                       gender: selectedValue.value!.value,
                                     ),
                                   );
@@ -252,7 +269,8 @@ class RegisterScreen extends HookConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      final contains = context.router.contains(LoginRoute.routeName);
+                      final contains =
+                          context.router.contains(LoginRoute.routeName);
                       if (contains) {
                         const LoginRoute().go(context);
                       } else {

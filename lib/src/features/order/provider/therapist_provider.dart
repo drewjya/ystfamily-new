@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/features/auth/view/register_screen.dart';
 import 'package:ystfamily/src/features/order/model/therapist.dart';
 import 'package:ystfamily/src/features/order/repository/order_repository_impl.dart';
 
@@ -23,12 +24,15 @@ class TherapistNotifier extends AsyncNotifier<List<Therapist>> {
     return [];
   }
 
-  load({required TherapistType arg}) async {
+  Future load(
+      {required String name,
+      required int cabangId,
+      required Gender gender}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref
+    final value = await AsyncValue.guard(() => ref
         .read(orderRepositoryProvider)
-        .getTherapist(
-            cabangId: arg.cabangId, tanggal: arg.tanggal, gender: arg.gender));
+        .queryTherapist(name: name, gender: gender, cabangId: cabangId));
+    state = value;
   }
 }
 

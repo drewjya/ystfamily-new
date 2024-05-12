@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' show get;
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:ystfamily/src/core/api/api_exception.dart';
+import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/common/image_picker.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/model/dto/update_profile.dart';
@@ -98,12 +101,13 @@ class EditProfileScreen extends HookConsumerWidget {
     final selectedGender = useState<Gender>(Gender.laki);
     final newFile = useState<XFile?>(null);
     final uint8List = useState<Uint8List?>(null);
+    final user = ref.watch(authProvider);
     useEffect(() {
       final user = ref.read(authProvider);
       namaController.text = user.value?.name ?? "";
       phoneNumberController.text = user.value?.phoneNumber ?? "";
       selectedGender.value = Gender.values.firstWhereOrNull(
-              (element) => element.value == user.value?.gender) ??
+              (element) => element.nama == user.value?.gender) ??
           Gender.laki;
       return;
     }, []);
@@ -177,8 +181,10 @@ class EditProfileScreen extends HookConsumerWidget {
                     uint8List.value = await file.readAsBytes();
                   },
                   file: uint8List.value,
-                  url: ref.watch(authProvider
-                      .select((value) => value.asData?.value.picture)),
+                  url: ref.watch(authProvider.select((value) =>
+                      value.asData?.value.picture != null
+                          ? "$image${value.asData?.value.picture}"
+                          : null)),
                 ),
                 const Gap(12),
                 TextFormField(
@@ -234,13 +240,31 @@ class EditProfileScreen extends HookConsumerWidget {
                 ),
                 const Gap(24),
                 VCard.horizontal(
-                  onTap: () {
-                    //     ref.watch(authProvider.select((value) => value.isLoading))
-                    // ? null
-                    // :
+                  onTap: () async {
+                    final auth = user.asData?.value.picture;
+
+                    if (newFile.value == null) {
+                      if (auth != null) {
+                        final data = await get(Uri.parse("$image$auth"));
+                        final tempDir = await getTemporaryDirectory();
+                        final file =
+                            await File('${tempDir.path}/$auth').create();
+                        await file.writeAsBytes(data.bodyBytes);
+
+                        newFile.value = XFile(file.path);
+
+                        // final name = xfile.name;
+                        // log("$name $auth NAME");
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Mohon Unggah Gambar"),
+                          ),
+                        );
+                        return;
+                      }
+                    }
                     if (formKey.currentState?.validate() ?? false) {
-                      final user = ref.read(authProvider).asData?.value;
-                      log(phoneNumberController.text);
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
                       showDialog(
                         context: context,
@@ -255,16 +279,9 @@ class EditProfileScreen extends HookConsumerWidget {
                           .read(authProvider.notifier)
                           .updateProfile(
                               params: UpdateProfileDTO(
-                            gender: selectedGender.value.value,
-                            nama: user?.name == namaController.text ||
-                                    namaController.text.isEmpty
-                                ? null
-                                : namaController.text,
-                            phoneNumber: user?.phoneNumber ==
-                                        phoneNumberController.text ||
-                                    phoneNumberController.text.isEmpty
-                                ? null
-                                : phoneNumberController.text,
+                            gender: selectedGender.value.nama,
+                            nama: namaController.text,
+                            phoneNumber: phoneNumberController.text,
                             profilePicture: newFile.value,
                           ))
                           .then((value) {

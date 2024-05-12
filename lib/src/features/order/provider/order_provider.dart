@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/order/model/order_dto.dart';
 import 'package:ystfamily/src/features/order/repository/order_repository_impl.dart';
@@ -25,12 +24,15 @@ class OrderNotifier extends AsyncNotifier<String> {
 
   postOrder({required OrderDto body}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref.read(orderRepositoryProvider).postOrder(body: body));
+    state = await AsyncValue.guard(
+        () => ref.read(orderRepositoryProvider).postOrder(order: body));
   }
 
   postBuktiOrder({required int orderId, required XFile file}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref.read(orderRepositoryProvider).postBuktiPembayaranMobile(orderId: orderId, file: file));
+    state = await AsyncValue.guard(() => ref
+        .read(orderRepositoryProvider)
+        .postBuktiPembayaranMobile(orderId: orderId, file: file));
   }
 }
 

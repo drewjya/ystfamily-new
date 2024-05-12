@@ -14,87 +14,92 @@ class HistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 80,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        width: 8,
-                      );
-                    },
-                    itemBuilder: (context, index) {
-                      final e = OrderStatus.values[index];
-                      return ChoiceChip(
-                        label: Text(e.value.toTitle),
-                        selected: ref.watch(orderStatusProvider) == e,
-                        onSelected: ref.watch(historyProvider
-                                .select((value) => value.isLoading))
-                            ? null
-                            : (value) {
-                                ref.read(orderStatusProvider.notifier).update(
-                                      (state) => e,
-                                    );
-                              },
-                      );
-                    },
-                    itemCount: OrderStatus.values.length,
-                    scrollDirection: Axis.horizontal,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ref.watch(historyProvider).when(
-                  data: (data) {
-                    if (data.isEmpty) {
-                      return const Center(
-                        child: Text("Belum Ada Riwayat"),
-                      );
-                    }
-                    return ListView.separated(
-                      itemCount: data.length + 1,
-                      padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16)
-                          .copyWith(top: 4),
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(historyProvider);
+      },
+      child: Scaffold(
+        body: Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 80,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: ListView.separated(
                       separatorBuilder: (context, index) {
                         return const SizedBox(
-                          height: 16,
+                          width: 8,
                         );
                       },
                       itemBuilder: (context, index) {
-                        if (index == data.length) {
-                          return const SizedBox(
-                            height: 48,
-                            width: 8,
-                          );
-                        }
-                        return HistoryCard(
-                          history: data[index],
-                          onTap: () {
-                            DetailHistoryRoute(id: data[index].id)
-                                .push(context);
-                          },
+                        final e = OrderStatus.values[index];
+                        return ChoiceChip(
+                          label: Text(e.value.toTitle),
+                          selected: ref.watch(orderStatusProvider) == e,
+                          onSelected: ref.watch(historyProvider
+                                  .select((value) => value.isLoading))
+                              ? null
+                              : (value) {
+                                  ref.read(orderStatusProvider.notifier).update(
+                                        (state) => e,
+                                      );
+                                },
                         );
                       },
-                    );
-                  },
-                  error: (error, stackTrace) {
-                    return Center(child: Text("$error"));
-                  },
-                  loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  },
+                      itemCount: OrderStatus.values.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          )),
+                Expanded(
+                  child: ref.watch(historyProvider).when(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return const Center(
+                          child: Text("Belum Ada Riwayat"),
+                        );
+                      }
+                      return ListView.separated(
+                        itemCount: data.length + 1,
+                        padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 16)
+                            .copyWith(top: 4),
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            height: 16,
+                          );
+                        },
+                        itemBuilder: (context, index) {
+                          if (index == data.length) {
+                            return const SizedBox(
+                              height: 48,
+                              width: 8,
+                            );
+                          }
+                          return HistoryCard(
+                            history: data[index],
+                            onTap: () {
+                              DetailHistoryRoute(id: data[index].id)
+                                  .push(context);
+                            },
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      return Center(child: Text("$error"));
+                    },
+                    loading: () {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ),
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

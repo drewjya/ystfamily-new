@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/core/provider/banner_provider.dart';
-import 'package:ystfamily/src/features/history/view/detail_history_screen.dart';
 import 'package:ystfamily/src/features/home/home.dart';
 
 class ImageSliders extends StatelessWidget {
@@ -21,28 +20,23 @@ class ImageSliders extends StatelessWidget {
       margin: const EdgeInsets.all(5.0),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-        child: InkWell(
-          onTap: () {
-            showImageInteractive(context, url);
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          width: 800.0,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress?.cumulativeBytesLoaded !=
+                loadingProgress?.expectedTotalBytes) {
+              return Center(
+                child: LinearProgressIndicator(
+                  minHeight: 120,
+                  value: (loadingProgress?.cumulativeBytesLoaded ?? 0) /
+                      (loadingProgress?.expectedTotalBytes ?? 1),
+                ),
+              );
+            }
+            return child;
           },
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            width: 800.0,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress?.cumulativeBytesLoaded !=
-                  loadingProgress?.expectedTotalBytes) {
-                return Center(
-                  child: LinearProgressIndicator(
-                    minHeight: 120,
-                    value: (loadingProgress?.cumulativeBytesLoaded ?? 0) /
-                        (loadingProgress?.expectedTotalBytes ?? 1),
-                  ),
-                );
-              }
-              return child;
-            },
-          ),
         ),
       ),
     );

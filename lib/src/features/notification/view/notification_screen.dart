@@ -27,7 +27,8 @@ class NotificationScreen extends HookConsumerWidget {
                   }
                   return ListView.separated(
                     itemCount: data.length,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 12),
                     separatorBuilder: (context, index) {
                       return const Gap(12);
                     },
@@ -52,7 +53,8 @@ class NotificationScreen extends HookConsumerWidget {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  DateTime.parse(curr.createdAt).formatTimeAgo(),
+                                  DateTime.parse(curr.createdAt)
+                                      .formatTimeAgo(),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 12,
@@ -60,7 +62,7 @@ class NotificationScreen extends HookConsumerWidget {
                                 )
                               ],
                             ),
-                            Text(curr.message)
+                            Text(curr.description)
                           ],
                         ),
                       );

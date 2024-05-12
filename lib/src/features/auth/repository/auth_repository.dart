@@ -20,4 +20,5 @@ abstract class AuthRepository {
       {required String email,
       required String otp,
       required String newPassword});
+  Future<bool> deleteAccount();
 }

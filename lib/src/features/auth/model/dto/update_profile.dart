@@ -3,27 +3,27 @@
 import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileDTO {
-  final String? nama;
-  final String? phoneNumber;
-  final String? gender;
+  final String nama;
+  final String phoneNumber;
+  final String gender;
   final XFile? profilePicture;
   UpdateProfileDTO({
-    this.nama,
-    this.phoneNumber,
-    this.gender,
+    required this.nama,
+    required this.phoneNumber,
+    required this.gender,
     this.profilePicture,
   });
 
   Map<String, XFile>? getProfilePictureMap() {
-    return profilePicture != null ? {"profile_picture": profilePicture!} : null;
+    return profilePicture != null ? {"file": profilePicture!} : null;
   }
 
   Map<String, String> getBody() {
     var body = <String, String>{};
 
-    if (nama != null) body['nama'] = nama!;
-    if (phoneNumber != null) body['phone_number'] = phoneNumber!;
-    if (gender != null) body['gender'] = gender!;
+    body['name'] = nama;
+    body['phoneNumber'] = phoneNumber;
+     body['gender'] = gender;
 
     return body;
   }
@@ -37,11 +37,17 @@ class UpdateProfileDTO {
   bool operator ==(covariant UpdateProfileDTO other) {
     if (identical(this, other)) return true;
 
-    return other.nama == nama && other.phoneNumber == phoneNumber && other.gender == gender && other.profilePicture == profilePicture;
+    return other.nama == nama &&
+        other.phoneNumber == phoneNumber &&
+        other.gender == gender &&
+        other.profilePicture == profilePicture;
   }
 
   @override
   int get hashCode {
-    return nama.hashCode ^ phoneNumber.hashCode ^ gender.hashCode ^ profilePicture.hashCode;
+    return nama.hashCode ^
+        phoneNumber.hashCode ^
+        gender.hashCode ^
+        profilePicture.hashCode;
   }
 }

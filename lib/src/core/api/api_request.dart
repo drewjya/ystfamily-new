@@ -17,6 +17,8 @@ import 'package:ystfamily/src/core/provider/pref_provider.dart';
 
 part 'api_request.g.dart';
 
+enum Mode { post, put }
+
 class ApiRequest {
   final SharedPreferences pref;
   ApiRequest({
@@ -119,6 +121,7 @@ class ApiRequest {
       Map<String, String>? body,
       Map<String, XFile>? bodyImage,
       bool isRefresh = false,
+      Mode mode = Mode.post,
       bool isAuth = false}) async {
     try {
       Map<String, String> header =
@@ -130,7 +133,7 @@ class ApiRequest {
       }
 
       var request = http.MultipartRequest(
-        'POST',
+        mode == Mode.post ? 'POST' : "PUT",
         Uri.parse(url),
       );
       request.headers.addAll(header);
@@ -139,7 +142,8 @@ class ApiRequest {
         for (var i = 0; i < bodyImage.length; i++) {
           final key = bodyImage.keys.elementAt(i);
           final value = bodyImage.values.elementAt(i);
-          if (kIsWeb) {
+          log("${value.name} VAL PATH");
+          if (kIsWeb || value.path.trim().isEmpty) {
             final ext = value.name.split('.').last;
             final name = value.name.split('.');
             final fixName = name.sublist(0, name.length - 1).join('.');

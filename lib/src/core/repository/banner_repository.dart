@@ -20,7 +20,7 @@ class IBannerRepository implements BannerRepository {
         url: BannerPath.banner, isAuth: true, isRefresh: false);
     return ((res.data as List?) ?? []).cast<Map<String, dynamic>>().map((e) {
       log("$e");
-      return '${e['picture']['path']}';
+      return '${e['picture']}';
     }).toList();
   }
 }

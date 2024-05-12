@@ -54,6 +54,6 @@ class RescheduleOrderScreen extends HookConsumerWidget {
         },
       );
     });
-    return Scaffold();
+    return const Scaffold();
   }
 }

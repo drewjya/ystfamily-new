@@ -1,120 +1,114 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
-class OrderDetailDTO {
-  final int? treatmentId;
-  final int? additionalTreatmentId;
-  final bool additional;
-  final bool happyHour;
-  OrderDetailDTO._({
-    this.treatmentId,
-    this.additionalTreatmentId,
-    required this.additional,
-    required this.happyHour,
-  });
-
-  factory OrderDetailDTO.treatment({required int treatmentId, required bool happyHour}) => OrderDetailDTO._(additional: false, happyHour: happyHour, treatmentId: treatmentId);
-  factory OrderDetailDTO.additional({required int additionalTreatmentId}) => OrderDetailDTO._(additional: true, happyHour: false, additionalTreatmentId: additionalTreatmentId);
-
-  Map<String, dynamic> toMap() {
-    if (additional) {
-      return <String, dynamic>{
-        'additional_treatment_id': additionalTreatmentId,
-        'additional': additional,
-        'happy_hour': happyHour,
-      };
-    }
-    return <String, dynamic>{
-      'treatment_id': treatmentId,
-      'additional': additional,
-      'happy_hour': happyHour,
-    };
-  }
-
-  String toJson() => json.encode(toMap());
-
-  @override
-  String toString() {
-    return 'OrderDetailDTO(treatmentId: $treatmentId, additionalTreatmentId: $additionalTreatmentId, additional: $additional, happyHour: $happyHour)';
-  }
-}
+import 'package:collection/collection.dart';
 
 class OrderDto {
+  final String orderDate;
+  final String orderTime;
   final int cabangId;
-  final int therapistId;
-  final String orderStartTime;
-  final DateTime orderDate;
-  final bool genderTherapist;
-  final List<OrderDetailDTO> treatments;
+  final int? therapistId;
+  final String guestGender;
+  final String therapistGender;
+  final List<int> treatmentDetail;
   OrderDto({
-    required this.cabangId,
-    required this.therapistId,
-    required this.orderStartTime,
     required this.orderDate,
-    required this.genderTherapist,
-    required this.treatments,
+    required this.orderTime,
+    required this.cabangId,
+    this.therapistId,
+    required this.guestGender,
+    required this.therapistGender,
+    required this.treatmentDetail,
   });
 
   OrderDto copyWith({
+    String? orderDate,
+    String? orderTime,
     int? cabangId,
     int? therapistId,
-    String? orderStartTime,
-    DateTime? orderDate,
-    bool? genderTherapist,
-    List<OrderDetailDTO>? treatments,
+    String? guestGender,
+    String? therapistGender,
+    List<int>? treatmentDetail,
   }) {
     return OrderDto(
+      orderDate: orderDate ?? this.orderDate,
+      orderTime: orderTime ?? this.orderTime,
       cabangId: cabangId ?? this.cabangId,
       therapistId: therapistId ?? this.therapistId,
-      orderStartTime: orderStartTime ?? this.orderStartTime,
-      orderDate: orderDate ?? this.orderDate,
-      genderTherapist: genderTherapist ?? this.genderTherapist,
-      treatments: treatments ?? this.treatments,
+      guestGender: guestGender ?? this.guestGender,
+      therapistGender: therapistGender ?? this.therapistGender,
+      treatmentDetail: treatmentDetail ?? this.treatmentDetail,
     );
   }
 
   Map<String, dynamic> toMap() {
+    if (therapistId != null) {
+      return <String, dynamic>{
+        'orderDate': orderDate,
+        'orderTime': orderTime,
+        'cabangId': cabangId,
+        'therapistId': therapistId,
+        'guestGender': guestGender,
+        'therapistGender': therapistGender,
+        'treatementDetail': treatmentDetail,
+      };
+    }
     return <String, dynamic>{
-      'cabang_id': cabangId,
-      'therapist_id': therapistId,
-      'order_start_time': '0001-01-01T${orderStartTime}Z',
-      'order_date': removeLast0(orderDate.toIso8601String()),
-      'order_detail': treatments.map((x) => x.toMap()).toList(),
-      'gender_therapist': genderTherapist,
+      'orderDate': orderDate,
+      'orderTime': orderTime,
+      'cabangId': cabangId,
+      'guestGender': guestGender,
+      'therapistGender': therapistGender,
+      'treatementDetail': treatmentDetail,
     };
   }
 
-  String removeLast0(String data) {
-    if (data.endsWith("0Z")) {
-      return "${data.substring(0, data.length - 2)}Z";
-    }
-    return data;
+  factory OrderDto.fromMap(Map<String, dynamic> map) {
+    return OrderDto(
+        orderDate: map['orderDate'] as String,
+        orderTime: map['orderTime'] as String,
+        cabangId: map['cabangId'] as int,
+        therapistId:
+            map['therapistId'] != null ? map['therapistId'] as int : null,
+        guestGender: map['guestGender'] as String,
+        therapistGender: map['therapistGender'] as String,
+        treatmentDetail: List<int>.from(
+          (map['treatmentDetail'] as List<int>),
+        ));
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory OrderDto.fromJson(String source) =>
+      OrderDto.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'OrderDto(cabangId: $cabangId, therapistId: $therapistId, orderStartTime: $orderStartTime, orderDate: $orderDate, genderTherapist: $genderTherapist, treatments: $treatments)';
+    return 'OrderDto(orderDate: $orderDate, orderTime: $orderTime, cabangId: $cabangId, therapistId: $therapistId, guestGender: $guestGender, therapistGender: $therapistGender, treatmentDetail: $treatmentDetail)';
   }
 
   @override
   bool operator ==(covariant OrderDto other) {
     if (identical(this, other)) return true;
+    final listEquals = const DeepCollectionEquality().equals;
 
-    return other.cabangId == cabangId &&
+    return other.orderDate == orderDate &&
+        other.orderTime == orderTime &&
+        other.cabangId == cabangId &&
         other.therapistId == therapistId &&
-        other.orderStartTime == orderStartTime &&
-        other.orderDate == orderDate &&
-        other.genderTherapist == genderTherapist &&
-        listEquals(other.treatments, treatments);
+        other.guestGender == guestGender &&
+        other.therapistGender == therapistGender &&
+        listEquals(other.treatmentDetail, treatmentDetail);
   }
 
   @override
   int get hashCode {
-    return cabangId.hashCode ^ therapistId.hashCode ^ orderStartTime.hashCode ^ orderDate.hashCode ^ genderTherapist.hashCode ^ treatments.hashCode;
+    return orderDate.hashCode ^
+        orderTime.hashCode ^
+        cabangId.hashCode ^
+        therapistId.hashCode ^
+        guestGender.hashCode ^
+        therapistGender.hashCode ^
+        treatmentDetail.hashCode;
   }
-
-  String toJson() => json.encode(toMap());
 }
