@@ -284,13 +284,13 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     },
                   ),
                   const Text(
-                    "Jam Terapi",
+                    "Jam Treatment",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                   MultiSelectWidget(
                     data: timeslots.asData?.value?.timeSlot ?? <String>[],
                     displayed: () => jamTerapi.value,
-                    labelText: "Pilih Jam Terapi",
+                    labelText: "Pilih Jam Treatment",
                     maxSelected: 1,
                     icon: const Icon(Icons.access_time),
                     iconDropdown: const Icon(Icons.access_time),
