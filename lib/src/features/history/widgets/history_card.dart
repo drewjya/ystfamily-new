@@ -21,31 +21,35 @@ class HistoryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                history.orderId,
-                style: const TextStyle(
-                  color: VColor.primaryTextColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              Expanded(
                 child: Text(
-                  history.orderStatus,
+                  history.orderId,
+                  maxLines: 1,
                   style: const TextStyle(
-                    color: VColor.secondaryBackground,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
+                    overflow: TextOverflow.ellipsis,
+                    color: VColor.primaryTextColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  child: Text(
+                    history.orderStatus,
+                    style: const TextStyle(
+                      color: VColor.secondaryBackground,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              
             ],
           ),
           const Gap(
