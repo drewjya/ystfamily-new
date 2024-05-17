@@ -191,7 +191,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
               isSelected: true,
             ),
             const Text(
-              "Jenis Kelamin Terapis",
+              "Jenis Kelamin Therapist",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
             ),
             Row(
@@ -262,7 +262,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Pilih Terapis (Opsional)",
+                    "Pilih Therapist (Opsional)",
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                   ),
                   SelectTherapist(
@@ -297,7 +297,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     onDisplay: (value) => value,
                     onRemove: (value) {
                       jamTerapi.value = null;
-                      return [jamTerapi.value ?? ""];
+                      return [];
                     },
                     onSelect: (value) {
                       jamTerapi.value = value;
@@ -448,14 +448,14 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                   : null,
               child: Center(
                 child: Text(
-                  'Submit',
+                  'Kirim',
                   style: TextStyle(
-                    color: jamTerapi.value != null ||
-                            selectedTreatment.value.isNotEmpty ||
-                            selectedDate.value != null ||
-                            selectedTherapistGender.value != null ||
+                    color: jamTerapi.value != null &&
+                            selectedTreatment.value.isNotEmpty &&
+                            selectedDate.value != null &&
+                            selectedTherapistGender.value != null &&
                             selectGuestGender.value != null
-                        ? null
+                        ? VColor.darkBrown
                         : Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -525,14 +525,14 @@ class PreviewOrderWidget extends ConsumerWidget {
             ),
             const Gap(13),
             RowItem(
-              title: "Tanggal Order",
+              title: "Tanggal Treatment",
               titleStyle: titleStyle,
               valueStyle: valueStyle,
               value: preview.orderTime.date,
             ),
             const Gap(13),
             RowItem(
-              title: "Waktu Order",
+              title: "Jam Treatment",
               titleStyle: titleStyle,
               valueStyle: valueStyle,
               value: preview.orderTime.getHour,
@@ -546,11 +546,18 @@ class PreviewOrderWidget extends ConsumerWidget {
             ),
             const Gap(13),
             RowItem(
-              title: "Terapis",
+              title: "Therapist",
               titleStyle: titleStyle,
               valueStyle: valueStyle,
               value:
-                  "${therapist != null ? therapist!.nama : ""} (${preview.therapistGender})",
+                  "${therapist != null ? therapist!.nama : ""} (${preview.therapistGender.gender})",
+            ),
+            const Gap(13),
+            RowItem(
+              title: "Tamu",
+              titleStyle: titleStyle,
+              valueStyle: valueStyle,
+              value: preview.guestGender.gender,
             ),
             const Gap(13),
             Expanded(
@@ -686,7 +693,7 @@ class _SelectTherapistState extends State<SelectTherapist> {
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
-                            "Pilih Terapis (Opsional)",
+                            "Pilih Therapist (Opsional)",
                             style: TextStyle(
                               fontSize: 18,
                               color: VColor.primaryTextColor,
@@ -815,7 +822,7 @@ class _SelectTherapistState extends State<SelectTherapist> {
         children: [
           Expanded(
             child: Text(
-              widget.selected?.nama ?? "Pilih Terapis (Opsional)",
+              widget.selected?.nama ?? "Pilih Therapist (Opsional)",
               style: const TextStyle(
                 fontSize: 16,
                 color: VColor.primaryTextColor,
@@ -871,6 +878,12 @@ class _MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
     currSelected = widget.selected;
 
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant MultiSelectWidget<T> oldWidget) {
+    currSelected = widget.selected;
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -972,6 +985,7 @@ class _MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
                         child: ListView.builder(
                           itemCount: searchData.length,
                           itemBuilder: (context, index) {
+                            log("$currSelected");
                             final isSelected =
                                 currSelected.contains(searchData[index]);
                             return TextButton(
@@ -987,6 +1001,7 @@ class _MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
                                   setState2(() {
                                     currSelected =
                                         widget.onRemove(searchData[index]);
+                                    log("$currSelected");
                                     errorText = "";
                                   });
                                   if (widget.maxSelected == 1) {

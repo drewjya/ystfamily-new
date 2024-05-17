@@ -152,10 +152,10 @@ class DetailHistoryScreen extends HookConsumerWidget {
                     if (index == 2) {
                       return Row(
                         children: [
-                          const Text("Tanggal Booking"),
+                          const Text("Tanggal Treatment"),
                           const Spacer(),
                           Text(
-                            DateTime.parse(data.orderTime).formatTimePesanan(),
+                            data.orderTime.toDate?.formatTimePesanan() ?? "-",
                           )
                         ],
                       );
@@ -200,7 +200,15 @@ class DetailHistoryScreen extends HookConsumerWidget {
                               const Text("Therapist"),
                               const Spacer(),
                               Text(
-                                  "${data.therapist ?? ""} - ${data.therapistGender}"),
+                                  "${data.therapist ?? ""} - ${data.therapistGender.gender}"),
+                            ],
+                          ),
+                          const Gap(12),
+                          Row(
+                            children: [
+                              const Text("Tamu"),
+                              const Spacer(),
+                              Text(data.guestGender.gender),
                             ],
                           ),
                         ],
@@ -219,7 +227,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                     if (index == 7) {
                       return Row(
                         children: [
-                          const Text("Waktu Treatment"),
+                          const Text("Jam Treatment"),
                           const Spacer(),
                           Text(data.orderTime.toDate?.getHour() ?? "-"),
                         ],

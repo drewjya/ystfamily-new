@@ -40,17 +40,29 @@ extension DateTimeX on DateTime {
 }
 
 extension StringDate on String {
-  DateTime? get toDate => DateTime.tryParse(this);
+  DateTime? get toDate => DateTime.tryParse(this)?.toLocal();
 
   String get toTitle {
     return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 
   String get date {
-    return DateFormat("dd MMM yyyy").format(DateTime.parse(this));
+    return DateFormat("dd MMM yyyy").format(DateTime.parse(this).toLocal());
   }
 
   String get getHour {
-    return DateFormat("HH:mm:ss").format(DateTime.parse(this));
+    return DateFormat("HH:mm:ss").format(DateTime.parse(this).toLocal());
+  }
+
+  String get gender {
+    return [
+      "male",
+      'pria',
+      'laki',
+      'laki-laki',
+      'm',
+    ].contains(toLowerCase())
+        ? "Laki-laki"
+        : "Perempuan";
   }
 }
