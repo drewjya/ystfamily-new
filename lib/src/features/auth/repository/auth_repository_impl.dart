@@ -147,9 +147,89 @@ class AuthRepositoryImpl implements AuthRepository {
     final req = await request.delete(url: AuthPath.deleteAccount, isAuth: true);
     return req.data != null;
   }
+
+  @override
+  Future<SVersion> version() async {
+    final req = await request.get(url: AuthPath.version);
+
+    return SVersion.fromMap(req.data);
+  }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
       request: ref.read(requestProvider), pref: ref.read(prefProvider));
 });
+
+class SVersion {
+  final String version;
+  final bool launched;
+  final String appStoreLink;
+  final String playStoreLink;
+  const SVersion({
+    required this.version,
+    required this.launched,
+    required this.appStoreLink,
+    required this.playStoreLink,
+  });
+
+  SVersion copyWith({
+    String? version,
+    bool? launched,
+    String? appStoreLink,
+    String? playStoreLink,
+  }) {
+    return SVersion(
+      version: version ?? this.version,
+      launched: launched ?? this.launched,
+      appStoreLink: appStoreLink ?? this.appStoreLink,
+      playStoreLink: playStoreLink ?? this.playStoreLink,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'version': version,
+      'launched': launched,
+      'appStoreLink': appStoreLink,
+      'playStoreLink': playStoreLink,
+    };
+  }
+
+  factory SVersion.fromMap(Map<String, dynamic> map) {
+    return SVersion(
+      version: map['version'] as String,
+      launched: map['launched'] as bool,
+      appStoreLink: map['appStroreLink'] as String,
+      playStoreLink: map['playStoreLink'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SVersion.fromJson(String source) =>
+      SVersion.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'SVersion(version: $version, launched: $launched, appStoreLink: $appStoreLink, playStoreLink: $playStoreLink)';
+  }
+
+  @override
+  bool operator ==(covariant SVersion other) {
+    if (identical(this, other)) return true;
+
+    return other.version == version &&
+        other.launched == launched &&
+        other.appStoreLink == appStoreLink &&
+        other.playStoreLink == playStoreLink;
+  }
+
+  @override
+  int get hashCode {
+    return version.hashCode ^
+        launched.hashCode ^
+        appStoreLink.hashCode ^
+        playStoreLink.hashCode;
+  }
+}

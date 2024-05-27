@@ -13,5 +13,11 @@
     },
     "hide-files.files": [],
     "dart.flutterSdkPath": "/Users/developersahamrakyat/.puro/envs/andre/flutter",
-    "dart.sdkPath": "/Users/developersahamrakyat/.puro/envs/andre/flutter/bin/cache/dart-sdk"
+    "dart.sdkPath": "/Users/developersahamrakyat/.puro/envs/andre/flutter/bin/cache/dart-sdk",
+    "files.autoSave": "afterDelay",
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.organizeImports": "always"
+    }
 }

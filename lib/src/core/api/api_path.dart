@@ -18,6 +18,7 @@ class AuthPath {
   static const editProfile = '$api/auth/profile';
   static const tokenFirebase = '$api/auth/token';
   static const deleteAccount = '$api/auth';
+  static const version = '$api/version';
 }
 
 class BannerPath {

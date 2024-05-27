@@ -6,3 +6,12 @@ website:
 bios:
 		flutter clean
 		flutter build ipa
+
+bapk:
+		flutter clean
+		flutter build apk --split-per-abi
+
+bapp:
+		flutter clean
+		flutter build appbundle --release
+	

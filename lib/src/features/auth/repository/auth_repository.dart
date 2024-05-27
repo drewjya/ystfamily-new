@@ -2,6 +2,7 @@ import 'package:ystfamily/src/features/auth/model/dto/login_dto.dart';
 import 'package:ystfamily/src/features/auth/model/dto/register_dto.dart';
 import 'package:ystfamily/src/features/auth/model/dto/update_profile.dart';
 import 'package:ystfamily/src/features/auth/model/user.dart';
+import 'package:ystfamily/src/features/auth/repository/auth_repository_impl.dart';
 
 abstract class AuthRepository {
   Future<User> getProfile();
@@ -21,4 +22,5 @@ abstract class AuthRepository {
       required String otp,
       required String newPassword});
   Future<bool> deleteAccount();
+  Future<SVersion> version();
 }

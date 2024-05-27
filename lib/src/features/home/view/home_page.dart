@@ -1,5 +1,6 @@
 import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 
 import '../widget/treatment_section.dart';
 import '../widget/widget.dart';
@@ -19,32 +20,36 @@ class HomePage extends HookConsumerWidget {
       child: Column(
         children: [
           Expanded(
-            child: ListView.separated(
-              itemCount: 4,
-              physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics()),
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  height: 12,
-                );
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(cabangProvider);
               },
-              padding: const EdgeInsets.symmetric(vertical: 0),
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return const CarouselHome();
-                }
+              child: ListView.separated(
+                itemCount: 4,
+                physics: const AlwaysScrollableScrollPhysics(),
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    height: 12,
+                  );
+                },
+                padding: const EdgeInsets.symmetric(vertical: 0),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return const CarouselHome();
+                  }
 
-                if (index == 1) {
-                  return const CabangSection();
-                }
-                if (index == 2) {
-                  return const TreatmentSection();
-                }
+                  if (index == 1) {
+                    return const CabangSection();
+                  }
+                  if (index == 2) {
+                    return const TreatmentSection();
+                  }
 
-                return const SizedBox(
-                  height: 12,
-                );
-              },
+                  return const SizedBox(
+                    height: 12,
+                  );
+                },
+              ),
             ),
           ),
         ],
