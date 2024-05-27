@@ -19,6 +19,8 @@ class HomePage extends HookConsumerWidget {
           Expanded(
             child: ListView.separated(
               itemCount: 4,
+              physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics()),
               separatorBuilder: (context, index) {
                 return const SizedBox(
                   height: 12,

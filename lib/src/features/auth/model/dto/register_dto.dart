@@ -36,7 +36,7 @@ class RegisterDTO {
       'email': email,
       'password': password,
       'name': name,
-      'phone_number': phoneNumber,
+      'phoneNumber': phoneNumber,
       'gender': gender,
     };
   }
@@ -52,11 +52,19 @@ class RegisterDTO {
   bool operator ==(covariant RegisterDTO other) {
     if (identical(this, other)) return true;
 
-    return other.email == email && other.password == password && other.name == name && other.phoneNumber == phoneNumber && other.gender == gender;
+    return other.email == email &&
+        other.password == password &&
+        other.name == name &&
+        other.phoneNumber == phoneNumber &&
+        other.gender == gender;
   }
 
   @override
   int get hashCode {
-    return email.hashCode ^ password.hashCode ^ name.hashCode ^ phoneNumber.hashCode ^ gender.hashCode;
+    return email.hashCode ^
+        password.hashCode ^
+        name.hashCode ^
+        phoneNumber.hashCode ^
+        gender.hashCode;
   }
 }

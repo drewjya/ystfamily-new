@@ -242,7 +242,6 @@ class EditProfileScreen extends HookConsumerWidget {
                 VCard.horizontal(
                   onTap: () async {
                     final auth = user.asData?.value.picture;
-
                     if (newFile.value == null) {
                       if (auth != null) {
                         final data = await get(Uri.parse("$image$auth"));
@@ -265,6 +264,9 @@ class EditProfileScreen extends HookConsumerWidget {
                       }
                     }
                     if (formKey.currentState?.validate() ?? false) {
+                      if (!context.mounted) {
+                        return;
+                      }
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
                       showDialog(
                         context: context,

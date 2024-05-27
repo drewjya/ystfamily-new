@@ -6,9 +6,23 @@ import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/common/image_picker.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
+import 'package:ystfamily/src/features/order/model/order_detail.dart';
 import 'package:ystfamily/src/features/order/order.dart';
 import 'package:ystfamily/src/features/order/provider/detail_order_provider.dart';
 import 'package:ystfamily/src/features/order/provider/order_provider.dart';
+
+_convertOrder(OrderDetail detail) {
+  if (detail.picture == null) {
+    return "Menunggu Pembayaran";
+  }
+  if (detail.picture != null && detail.confirmationTime == null) {
+    return "Menunggu Konfirmasi";
+  }
+  if (detail.picture != null && detail.confirmationTime != null) {
+    return "Selesai";
+  }
+  return "Menunggu Pembayaran";
+}
 
 class DetailHistoryScreen extends HookConsumerWidget {
   const DetailHistoryScreen({super.key, required this.id});
@@ -97,11 +111,13 @@ class DetailHistoryScreen extends HookConsumerWidget {
               skipLoadingOnReload: false,
               data: (data) {
                 return ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics()),
                   separatorBuilder: (context, index) {
                     return const Gap(12);
                   },
                   padding: const EdgeInsets.all(24),
-                  itemCount: 10,
+                  itemCount: 9,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return VCard.horizontal(
@@ -161,6 +177,17 @@ class DetailHistoryScreen extends HookConsumerWidget {
                       );
                     }
                     if (index == 3) {
+                      if (data.confirmationTime == null) {
+                        return Row(
+                          children: [
+                            const Text("Status Order"),
+                            const Spacer(),
+                            Text(
+                              _convertOrder(data),
+                            ),
+                          ],
+                        );
+                      }
                       return Row(
                         children: [
                           const Text("Tanggal Konfirmasi"),
@@ -174,17 +201,6 @@ class DetailHistoryScreen extends HookConsumerWidget {
                     }
 
                     if (index == 4) {
-                      return Row(
-                        children: [
-                          const Text("Durasi Treatment"),
-                          const Spacer(),
-                          Text(
-                            "${data.durasi} menit",
-                          ),
-                        ],
-                      );
-                    }
-                    if (index == 5) {
                       return Column(
                         children: [
                           Row(
@@ -214,7 +230,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         ],
                       );
                     }
-                    if (index == 6) {
+                    if (index == 5) {
                       return Row(
                         children: [
                           const Text("Tanggal Treatment"),
@@ -224,7 +240,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                       );
                     }
 
-                    if (index == 7) {
+                    if (index == 6) {
                       return Row(
                         children: [
                           const Text("Jam Treatment"),
@@ -233,7 +249,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         ],
                       );
                     }
-                    if (index == 8) {
+                    if (index == 7) {
                       return Row(
                         children: [
                           const Text("Total Harga"),
@@ -242,7 +258,7 @@ class DetailHistoryScreen extends HookConsumerWidget {
                         ],
                       );
                     }
-                    if (index == 9) {
+                    if (index == 8) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

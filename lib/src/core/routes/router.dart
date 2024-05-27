@@ -15,7 +15,6 @@ import 'package:ystfamily/src/features/home/home.dart';
 import 'package:ystfamily/src/features/notification/view/notification_screen.dart';
 import 'package:ystfamily/src/features/order/order.dart';
 import 'package:ystfamily/src/features/order/view/order_screen.dart';
-import 'package:ystfamily/src/features/order/view/reshedule_order_screen.dart';
 import 'package:ystfamily/src/features/profile/profile.dart';
 import 'package:ystfamily/src/features/profile/view/edit_profile_screen.dart';
 
@@ -233,24 +232,6 @@ class DetailHistoryRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       DetailHistoryScreen(id: id);
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CupertinoPage(child: build(context, state));
-  }
-}
-
-@TypedGoRoute<RescheduleOrderRoute>(path: RescheduleOrderRoute.routeName)
-class RescheduleOrderRoute extends GoRouteData {
-  static const routeName = "/reschedule/:id";
-
-  final int id;
-
-  const RescheduleOrderRoute({required this.id});
-  static final GlobalKey<NavigatorState> $parentNavigatorKey = navigatorKey;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      RescheduleOrderScreen(id: id);
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CupertinoPage(child: build(context, state));

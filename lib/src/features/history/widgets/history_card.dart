@@ -113,7 +113,7 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
                   if (history.countOrder > 1) ...[
-                    Gap(1),
+                    const Gap(1),
                     Text(
                       (history.countOrder > 1
                           ? " +${history.countOrder - 1}"

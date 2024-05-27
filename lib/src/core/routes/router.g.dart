@@ -18,7 +18,6 @@ List<RouteBase> get $appRoutes => [
       $notificationPageRoute,
       $cabangRoute,
       $detailHistoryRoute,
-      $rescheduleOrderRoute,
       $changePasswordRoute,
       $editProfileRoute,
       $orderRoute,
@@ -321,32 +320,6 @@ extension $DetailHistoryRouteExtension on DetailHistoryRoute {
 
   String get location => GoRouteData.$location(
         '/detail/history/${Uri.encodeComponent(id.toString())}',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $rescheduleOrderRoute => GoRouteData.$route(
-      path: '/reschedule/:id',
-      parentNavigatorKey: RescheduleOrderRoute.$parentNavigatorKey,
-      factory: $RescheduleOrderRouteExtension._fromState,
-    );
-
-extension $RescheduleOrderRouteExtension on RescheduleOrderRoute {
-  static RescheduleOrderRoute _fromState(GoRouterState state) =>
-      RescheduleOrderRoute(
-        id: int.parse(state.pathParameters['id']!),
-      );
-
-  String get location => GoRouteData.$location(
-        '/reschedule/${Uri.encodeComponent(id.toString())}',
       );
 
   void go(BuildContext context) => context.go(location);

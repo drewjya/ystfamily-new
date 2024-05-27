@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ystfamily/src/core/api/api_exception.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/model/dto/register_dto.dart';
@@ -63,6 +65,7 @@ class RegisterScreen extends HookConsumerWidget {
             dialogShown.value = false;
             Navigator.pop(context);
           }
+          log("$error");
           String message = "Silahkan coba lagi";
           if (error is ApiException) {
             message = (error).message;
@@ -255,7 +258,7 @@ class RegisterScreen extends HookConsumerWidget {
                                           phoneNumber.value.text.isEmpty
                                               ? null
                                               : phoneNumber.value.text,
-                                      gender: selectedValue.value!.value,
+                                      gender: selectedValue.value!.nama,
                                     ),
                                   );
                             }

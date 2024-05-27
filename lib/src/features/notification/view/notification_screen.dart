@@ -27,6 +27,8 @@ class NotificationScreen extends HookConsumerWidget {
                   }
                   return ListView.separated(
                     itemCount: data.length,
+                    physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics()),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 12),
                     separatorBuilder: (context, index) {

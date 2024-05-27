@@ -29,6 +29,8 @@ class HistoryPage extends HookConsumerWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 16),
                     child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics()),
                       separatorBuilder: (context, index) {
                         return const SizedBox(
                           width: 8,

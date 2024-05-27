@@ -46,6 +46,8 @@ class TreatmentSection extends HookConsumerWidget {
                 child: categories.when(
                   data: (data) {
                     return ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics()),
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       itemBuilder: (context, index) {
                         final treatment = data[index];

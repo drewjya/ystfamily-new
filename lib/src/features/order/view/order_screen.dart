@@ -753,6 +753,8 @@ class _SelectTherapistState extends State<SelectTherapist> {
                           data: (data) {
                             return ListView.builder(
                               itemCount: data.length,
+                              physics: const AlwaysScrollableScrollPhysics(
+                                  parent: BouncingScrollPhysics()),
                               itemBuilder: (context, index) {
                                 final isSelected =
                                     data[index].id == widget.selected?.id;
@@ -983,6 +985,8 @@ class _MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
                       ],
                       Expanded(
                         child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(
+                              parent: BouncingScrollPhysics()),
                           itemCount: searchData.length,
                           itemBuilder: (context, index) {
                             log("$currSelected");
@@ -1145,6 +1149,8 @@ class CabangSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics()),
         separatorBuilder: (context, index) {
           return const SizedBox(
             width: 16,

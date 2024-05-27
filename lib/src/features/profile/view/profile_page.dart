@@ -88,7 +88,7 @@ class ProfilePage extends HookConsumerWidget {
         body: Container(
           color: Colors.white,
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
@@ -203,7 +203,7 @@ class ProfilePage extends HookConsumerWidget {
                         ],
                       ),
                     );
-                    await Future.delayed(Duration(milliseconds: 300));
+                    await Future.delayed(const Duration(milliseconds: 300));
                     if (a) {
                       ref
                           .read(deleteAccountProvider.notifier)
