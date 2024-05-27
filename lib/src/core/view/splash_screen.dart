@@ -38,9 +38,10 @@ class SplashScreen extends HookConsumerWidget {
       maintainBottomViewPadding: false,
       minimum: const EdgeInsets.all(0),
       child: Scaffold(
+        backgroundColor: VColor.backgroundColor,
         body: Center(
           child: Image.asset(
-            "assets/logo.png",
+            "assets/logo_img.png",
             width: 95,
           ),
         ),
