@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/provider/history_provider.dart';
 import 'package:ystfamily/src/features/history/repository/history_repository.dart';
@@ -14,6 +15,7 @@ class HistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAuthHook(ref: ref, context: context);
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(historyProvider);

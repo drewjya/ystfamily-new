@@ -61,8 +61,8 @@ class LoginScreen extends HookConsumerWidget {
           return;
       }
     });
-    final emailController = useTextEditingController();
-    final passwordController = useTextEditingController();
+    final emailController = useTextEditingController(text: "drewjyaa@gmail.com");
+    final passwordController = useTextEditingController(text: "Admin123");
     final isSecure = useState(true);
     return Scaffold(
       appBar: AppBar(

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:ystfamily/src/core/api/api_exception.dart';
+import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
 import 'package:ystfamily/src/features/auth/view/register_screen.dart';
@@ -38,6 +39,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    useAuthHook(ref: ref, context: context);
     final cabang = ref.watch(selectedCabangProvider);
     final selectedTreatment = useState<Set<TreatmentCabang>>({});
     final selectedAdditional = useState<Set<TreatmentCabang>>({});

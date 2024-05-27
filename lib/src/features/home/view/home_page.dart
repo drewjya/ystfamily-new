@@ -1,3 +1,4 @@
+import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
 
 import '../widget/treatment_section.dart';
@@ -12,6 +13,7 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAuthHook(ref: ref, context: context);
     return Container(
       color: Colors.white,
       child: Column(
