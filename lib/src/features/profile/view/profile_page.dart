@@ -15,26 +15,37 @@ class ProfilePage extends HookConsumerWidget {
     final isLoading = useState(false);
     useAuthHook(ref: ref, context: context);
     ref.listen(deleteAccountProvider, (previous, next) {
-      next.when(
-          data: (data) {
-            if (isLoading.value) {
-              isLoading.value = false;
-              Navigator.pop(context);
-            }
-            if (data) {
-              ref.read(authProvider.notifier).logout();
-            }
-          },
-          error: (e, stackTrace) {
-            if (isLoading.value) {
-              isLoading.value = false;
-              Navigator.pop(context);
-            }
-            final error = errorRoot(e);
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(error)));
-          },
-          loading: () {});
+      next.when(data: (data) {
+        if (isLoading.value) {
+          isLoading.value = false;
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        if (data) {
+          ref.read(authProvider.notifier).logout();
+        }
+      }, error: (e, stackTrace) {
+        if (isLoading.value) {
+          isLoading.value = false;
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        final error = errorRoot(e);
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error)));
+      }, loading: () {
+        isLoading.value = true;
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        }
+      });
     });
     return RefreshIndicator(
       onRefresh: () async {
