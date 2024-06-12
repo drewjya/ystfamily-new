@@ -95,7 +95,7 @@ class OTPScreen extends HookConsumerWidget {
       });
     });
 
-    final data = ref.watch(otpProvider);
+    // final data = ref.watch(otpProvider);
     final user = ref.watch(authProvider);
     final otpVal = useState("");
 
