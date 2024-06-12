@@ -424,6 +424,9 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
+                          constraints: BoxConstraints(
+                            maxHeight: MediaQuery.sizeOf(context).width,
+                          ),
                           builder: (context) {
                             return PreviewOrderWidget(
                               preview: value,
@@ -499,13 +502,14 @@ class PreviewOrderWidget extends ConsumerWidget {
       fontWeight: FontWeight.w400,
     );
     return Container(
+
       decoration: BoxDecoration(
         color: VColor.backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(12),
       height: MediaQuery.sizeOf(context).height * 0.8,
-      width: double.infinity,
+      width: MediaQuery.sizeOf(context).width,
       child: DefaultTextStyle(
         style: style,
         child: Column(

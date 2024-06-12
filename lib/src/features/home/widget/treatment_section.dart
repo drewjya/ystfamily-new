@@ -61,7 +61,7 @@ class TreatmentSection extends HookConsumerWidget {
                               },
                               child: Center(
                                 child: Text(
-                                  treatment.nama.replaceAll(" ", "\n"),
+                                  treatment.nama.replaceFirst(" ", "\n"),
                                   softWrap: true,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
