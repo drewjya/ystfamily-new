@@ -13,7 +13,6 @@ List<RouteBase> get $appRoutes => [
       $forgetPasswordRoute,
       $oTPRoute,
       $otpForgetPasswordRoute,
-      $oTPLoginRoute,
       $homeRoute,
       $notificationPageRoute,
       $cabangRoute,
@@ -147,28 +146,6 @@ extension $OtpForgetPasswordRouteExtension on OtpForgetPasswordRoute {
 
   String get location => GoRouteData.$location(
         '/otp-forget-password/${Uri.encodeComponent(email)}',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $oTPLoginRoute => GoRouteData.$route(
-      path: '/otp-login',
-      factory: $OTPLoginRouteExtension._fromState,
-    );
-
-extension $OTPLoginRouteExtension on OTPLoginRoute {
-  static OTPLoginRoute _fromState(GoRouterState state) => const OTPLoginRoute();
-
-  String get location => GoRouteData.$location(
-        '/otp-login',
       );
 
   void go(BuildContext context) => context.go(location);

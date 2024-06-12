@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:pinput/pinput.dart';
+import 'package:ystfamily/src/core/api/api_exception.dart';
+import 'package:ystfamily/src/core/config/theme.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/auth/provider/otp_provider.dart';
@@ -42,10 +43,51 @@ class OTPScreen extends HookConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = useState(false);
     ref.listen(verifyOtpProvider, (previous, next) {
-      next.whenData((value) {
-        ref.invalidate(authProvider);
-      });
+      next.when(
+        data: (val) {
+          if (isLoading.value) {
+            isLoading.value = false;
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+          ref.invalidate(authProvider);
+        },
+        error: (e, stackTrace) {
+          log("$e");
+          final error = errorRoot(e);
+          if (error.toLowerCase() == "unauthorized" &&
+              error.toLowerCase() == "relogin") {
+            void logout() {
+              const LoginRoute().go(context);
+            }
+
+            logout();
+
+            return;
+          }
+          if (isLoading.value) {
+            isLoading.value = false;
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(error)));
+        },
+        loading: () {
+          isLoading.value = true;
+
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        },
+      );
     });
     ref.listen(authProvider, (previous, next) {
       next.whenData((value) {
@@ -129,7 +171,9 @@ class OTPScreen extends HookConsumerWidget {
                           children: [
                             TextSpan(
                               text: user.value?.email ?? "",
-                              style: (Theme.of(context).textTheme.bodyMedium ?? const TextStyle()).copyWith(
+                              style: (Theme.of(context).textTheme.bodyMedium ??
+                                      const TextStyle())
+                                  .copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -137,16 +181,13 @@ class OTPScreen extends HookConsumerWidget {
                         ),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      OtpTextField(
-                        numberOfFields: 6,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        keyboardType: const TextInputType.numberWithOptions(),
-                        onCodeChanged: (value) {
-                          log("VALUE $value");
-                        },
-                        onSubmit: (value) {
+                      Pinput(
+                        defaultPinTheme: defaultPinTheme,
+                        length: 6,
+                        focusedPinTheme: focusedPinTheme,
+                        submittedPinTheme: submittedPinTheme,
+                        onChanged: (value) {
                           otpVal.value = value;
-                          log(otpVal.value);
                         },
                       ),
                       const Gap(24),
@@ -158,7 +199,9 @@ class OTPScreen extends HookConsumerWidget {
                         ),
                         onPressed: () {
                           if (otpVal.value.length == 6) {
-                            ref.read(verifyOtpProvider.notifier).postOTP(otp: otpVal.value);
+                            ref
+                                .read(verifyOtpProvider.notifier)
+                                .postOTP(otp: otpVal.value);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -169,18 +212,22 @@ class OTPScreen extends HookConsumerWidget {
                         },
                       ),
                       const Gap(8),
-                      ElevatedButton(
-                        onPressed: data > 0
-                            ? null
-                            : () {
-                                ref.read(otpLengthProvider.notifier).setDate();
-                              },
-                        child: Center(
-                          child: Text(
-                            data > 0 ? "$data" : "Kirim ulang kode verifikasi",
-                          ),
-                        ),
-                      ),
+                      const Text(
+                        "Silahkan cek folder spam apabila tidak menemukan email otp",
+                        style: TextStyle(fontSize: 10),
+                      )
+                      // ElevatedButton(
+                      //   onPressed: data > 0
+                      //       ? null
+                      //       : () {
+                      //           ref.read(otpLengthProvider.notifier).setDate();
+                      //         },
+                      //   child: Center(
+                      //     child: Text(
+                      //       data > 0 ? "$data" : "Kirim ulang kode verifikasi",
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

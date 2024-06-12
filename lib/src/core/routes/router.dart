@@ -6,7 +6,6 @@ import 'package:ystfamily/src/features/auth/view/change_password_screen.dart';
 import 'package:ystfamily/src/features/auth/view/forget_password_screen.dart';
 import 'package:ystfamily/src/features/auth/view/login_screen.dart';
 import 'package:ystfamily/src/features/auth/view/otp_confirmation_password.dart';
-import 'package:ystfamily/src/features/auth/view/otp_login_screen.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
 import 'package:ystfamily/src/features/auth/view/register_screen.dart';
 import 'package:ystfamily/src/features/cabang/cabang.dart';
@@ -106,20 +105,6 @@ class OtpForgetPasswordRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       _buildCustomTransition(context, state, build(context, state));
-}
-
-@TypedGoRoute<OTPLoginRoute>(path: OTPLoginRoute.routeName)
-class OTPLoginRoute extends GoRouteData {
-  static const routeName = "/otp-login";
-
-  const OTPLoginRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const OTPLoginScreen();
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      _buildCustomTransition(context, state, const OTPLoginScreen());
 }
 
 @TypedShellRoute<HomeRoute>(

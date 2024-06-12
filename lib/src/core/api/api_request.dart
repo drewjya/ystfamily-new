@@ -87,6 +87,7 @@ class ApiRequest {
       bool isRefresh = false,
       bool isAuth = false}) async {
     try {
+      log("$body");
       Map<String, String> header =
           _authorization(isAuth: isAuth, isRefresh: isRefresh);
       String? bod;

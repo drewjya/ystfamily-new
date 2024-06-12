@@ -9,7 +9,7 @@ const image = '$baseUrl/img/';
 class AuthPath {
   static const login = '$api/auth/login';
   static const register = '$api/auth/register';
-  static confirmOtp(String otp) => '$api/auth/confirm/otp/$otp';
+  static confirmOtp(String otp) => '$api/auth/confirm/$otp';
   static const refreshProfile = '$api/auth/refresh';
   static const changePassword = '$api/auth/change-password';
   static const forgetPassword = '$api/auth/forget-password';

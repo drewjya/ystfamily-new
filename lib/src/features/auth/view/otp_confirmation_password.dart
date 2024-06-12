@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/services.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:pinput/pinput.dart';
 import 'package:ystfamily/src/core/api/api_exception.dart';
+import 'package:ystfamily/src/core/config/theme.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/otp_provider.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
@@ -148,7 +148,9 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
                           children: [
                             TextSpan(
                               text: email,
-                              style: (Theme.of(context).textTheme.bodyMedium ?? const TextStyle()).copyWith(
+                              style: (Theme.of(context).textTheme.bodyMedium ??
+                                      const TextStyle())
+                                  .copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -156,12 +158,12 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
                         ),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      OtpTextField(
-                        numberOfFields: 6,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        keyboardType: const TextInputType.numberWithOptions(),
-                        onCodeChanged: (value) {},
-                        onSubmit: (value) {
+                      Pinput(
+                        defaultPinTheme: defaultPinTheme,
+                        length: 6,
+                        focusedPinTheme: focusedPinTheme,
+                        submittedPinTheme: submittedPinTheme,
+                        onChanged: (value) {
                           otpVal.value = value;
                         },
                       ),
@@ -187,12 +189,16 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
                               child: child,
                             );
                           },
-                          child: isSecure.value ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                          child: isSecure.value
+                              ? const Icon(Icons.visibility_off)
+                              : const Icon(Icons.visibility),
                         ),
                       ),
                     ),
                     validator: (value) {
-                      return value != null && value.isNotEmpty ? null : "Kata kunci tidak boleh kosong";
+                      return value != null && value.isNotEmpty
+                          ? null
+                          : "Kata kunci tidak boleh kosong";
                     },
                   ),
 
@@ -206,7 +212,12 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
                     onPressed: () {
                       if (formKey.currentState?.validate() ?? false) {
                         if (otpVal.value.length == 6) {
-                          ref.read(verifyOtpProvider.notifier).postConfirmChangePassword(otp: otpVal.value, email: email, newPassword: passwordController.text);
+                          ref
+                              .read(verifyOtpProvider.notifier)
+                              .postConfirmChangePassword(
+                                  otp: otpVal.value,
+                                  email: email,
+                                  newPassword: passwordController.text);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -217,6 +228,10 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
                       }
                     },
                   ),
+                  const Text(
+                    "Silahkan cek folder spam apabila tidak menemukan email otp",
+                    style: TextStyle(fontSize: 10),
+                  )
                   // const Gap(8),
                   // ElevatedButton(
                   //   onPressed: data > 0

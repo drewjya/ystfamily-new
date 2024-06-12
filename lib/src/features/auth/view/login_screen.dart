@@ -61,8 +61,8 @@ class LoginScreen extends HookConsumerWidget {
           return;
       }
     });
-    final emailController = useTextEditingController(text: "drewjyaa@gmail.com");
-    final passwordController = useTextEditingController(text: "Admin123");
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
     final isSecure = useState(true);
     return Scaffold(
       appBar: AppBar(
@@ -111,14 +111,17 @@ class LoginScreen extends HookConsumerWidget {
                                 child: child,
                               );
                             },
-                            child: isSecure.value ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                            child: isSecure.value
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
                           )),
                     ),
                   ),
                   const Gap(24),
                   VCard.horizontal(
                     backgroundColor: VColor.primaryBackground,
-                    onTap: ref.watch(authProvider.select((value) => value.isLoading))
+                    onTap: ref.watch(
+                            authProvider.select((value) => value.isLoading))
                         ? null
                         : () {
                             ref.read(authProvider.notifier).login(
@@ -155,7 +158,8 @@ class LoginScreen extends HookConsumerWidget {
                   const Gap(4),
                   TextButton(
                     onPressed: () {
-                      final contains = context.router.contains(RegisterRoute.routeName);
+                      final contains =
+                          context.router.contains(RegisterRoute.routeName);
                       if (contains) {
                         const RegisterRoute().push(context);
                       } else {

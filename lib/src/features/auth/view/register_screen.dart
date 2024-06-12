@@ -43,7 +43,7 @@ class RegisterScreen extends HookConsumerWidget {
             },
           );
           return;
-        case AsyncData(:final value):
+        case AsyncData():
           final sc = ScaffoldMessenger.of(context);
           final nv = Navigator.of(context);
           sc.removeCurrentSnackBar();
@@ -52,11 +52,7 @@ class RegisterScreen extends HookConsumerWidget {
             dialogShown.value = false;
             nv.pop();
           }
-          if (value.isConfirmed) {
-            const HomePageRoute().go(context);
-          } else {
-            const OTPRoute().push(context);
-          }
+          const LoginRoute().replace(context);
 
           return;
         case AsyncError(:final error):

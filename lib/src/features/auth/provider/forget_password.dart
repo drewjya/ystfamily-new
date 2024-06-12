@@ -11,12 +11,18 @@ class ForgetPassword extends AsyncNotifier<String> {
 
   requestForgetPassword({required String email}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).requestForgetPassword(email: email));
+    state = await AsyncValue.guard(() =>
+        ref.read(authRepositoryProvider).requestForgetPassword(email: email));
   }
 
-  submitForgetPassword({required String email, required String newPassword, required String otp}) async {
+  submitForgetPassword(
+      {required String email,
+      required String newPassword,
+      required String otp}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).forgetPassword(email: email, otp: otp, newPassword: newPassword));
+    state = await AsyncValue.guard(() => ref
+        .read(authRepositoryProvider)
+        .forgetPassword(email: email, otp: otp, newPassword: newPassword));
   }
 }
 

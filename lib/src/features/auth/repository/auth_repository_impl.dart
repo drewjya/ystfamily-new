@@ -90,7 +90,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<String> verifyOtp({required String otp}) async {
     final res = await request.post(url: AuthPath.confirmOtp(otp), isAuth: true);
-    return res.data["message"];
+    return "${res.data}";
   }
 
   @override
@@ -133,13 +133,13 @@ class AuthRepositoryImpl implements AuthRepository {
           "password": newPassword,
         },
         isAuth: false);
-    return req.data["message"] ?? "sukses";
+    return req.message;
   }
 
   @override
   Future<String> requestForgetPassword({required String email}) async {
     final req = await request.post(url: AuthPath.requestForgetPassword(email));
-    return req.data["message"];
+    return "${req.data}";
   }
 
   @override

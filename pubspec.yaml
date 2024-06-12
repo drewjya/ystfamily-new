@@ -38,7 +38,6 @@ dependencies:
   riverpod_annotation: ^2.3.5
   http: ^1.2.0
   shared_preferences: ^2.2.3
-  flutter_otp_text_field: ^1.1.3+2
   gap: ^3.0.1
   go_router: ^13.2.4
   carousel_slider: ^4.2.1
@@ -70,6 +69,7 @@ dependencies:
   mime: ^1.0.5
   path_provider: ^2.1.3
   url_launcher: ^6.2.6
+  pinput: ^5.0.0
   
   
 
