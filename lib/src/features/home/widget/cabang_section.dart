@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:ystfamily/src/core/common/auth_dialog.dart';
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 import 'package:ystfamily/src/features/home/widget/widget.dart';
 
@@ -10,6 +12,7 @@ class CabangSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authProvider);
     return Container(
       padding: const EdgeInsets.only(bottom: 20).copyWith(left: 12),
       margin: const EdgeInsets.symmetric(
@@ -41,7 +44,6 @@ class CabangSection extends ConsumerWidget {
               const Spacer(),
               TextButton(
                   onPressed: () {
-                    
                     const CabangRoute(tipe: "all").push(context);
                   },
                   child: const Text("Lihat Semua"))
@@ -69,8 +71,13 @@ class CabangSection extends ConsumerWidget {
                           (index, e) => CabangCard(
                             cabang: e,
                             start: index != 2,
-                            onTap: (cabang) =>
-                                OrderRoute(branch: cabang.nama).push(context),
+                            onTap: (cabang) {
+                              if (auth.asData?.value != null) {
+                                OrderRoute(branch: cabang.nama).push(context);
+                              } else {
+                                authDialog(context);
+                              }
+                            },
                           ),
                         )
                         .toList();

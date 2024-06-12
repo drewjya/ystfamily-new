@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Aplikasi ini membutuhkan izin Gallery untuk bisa mungunggah gambar</string>
+	<string>Aplikasi ini membutuhkan izin Gallery untuk bisa mungunggah gambar bukti pembayaran dari order yang telah anda buat.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -17,7 +17,7 @@ class IBannerRepository implements BannerRepository {
   @override
   Future<List<String>> getBanners() async {
     final res = await request.get(
-        url: BannerPath.banner, isAuth: true, isRefresh: false);
+        url: BannerPath.banner, isAuth: false, isRefresh: false);
     return ((res.data as List?) ?? []).cast<Map<String, dynamic>>().map((e) {
       log("$e");
       return '${e['picture']}';

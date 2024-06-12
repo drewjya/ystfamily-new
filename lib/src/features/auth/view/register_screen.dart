@@ -85,6 +85,7 @@ class RegisterScreen extends HookConsumerWidget {
         foregroundColor: VColor.darkBrown,
         centerTitle: true,
       ),
+      backgroundColor: Colors.white,
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -268,13 +269,7 @@ class RegisterScreen extends HookConsumerWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      final contains =
-                          context.router.contains(LoginRoute.routeName);
-                      if (contains) {
-                        const LoginRoute().go(context);
-                      } else {
-                        const LoginRoute().push(context);
-                      }
+                      const LoginRoute().replace(context);
                     },
                     child: const Text.rich(
                       TextSpan(

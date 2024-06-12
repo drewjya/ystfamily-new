@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:ystfamily/src/core/common/auth_dialog.dart';
 import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/cabang/cabang.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 import 'package:ystfamily/src/features/cabang/provider/category_provider.dart';
@@ -13,6 +15,7 @@ class CabangScreen extends HookConsumerWidget {
   final String tipe;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -51,8 +54,13 @@ class CabangScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.all(24),
                   itemCount: cabangs.length,
                   itemBuilder: (context, index) => CabangCard(
-                      onTap: (caabna) =>
-                          OrderRoute(branch: cabangs[index].nama).push(context),
+                      onTap: (caabna) {
+                        if (auth.asData?.value != null) {
+                          OrderRoute(branch: cabangs[index].nama).push(context);
+                        } else {
+                          authDialog(context);
+                        }
+                      },
                       start: index != cabangs.length,
                       cabang: cabangs[index]),
                 );

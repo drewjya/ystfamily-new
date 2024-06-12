@@ -158,13 +158,7 @@ class LoginScreen extends HookConsumerWidget {
                   const Gap(4),
                   TextButton(
                     onPressed: () {
-                      final contains =
-                          context.router.contains(RegisterRoute.routeName);
-                      if (contains) {
-                        const RegisterRoute().push(context);
-                      } else {
-                        const RegisterRoute().push(context);
-                      }
+                      const RegisterRoute().replace(context);
                     },
                     child: const Text.rich(
                       TextSpan(

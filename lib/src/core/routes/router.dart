@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ystfamily/main.dart';
+import 'package:ystfamily/src/core/view/unhome_screen.dart';
 import 'package:ystfamily/src/features/auth/view/change_password_screen.dart';
 import 'package:ystfamily/src/features/auth/view/forget_password_screen.dart';
 import 'package:ystfamily/src/features/auth/view/login_screen.dart';
@@ -36,6 +37,19 @@ class SplashRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       _buildCustomTransition(context, state, const SplashScreen());
+}
+
+@TypedGoRoute<UnHomeRoute>(path: UnHomeRoute.routeName)
+class UnHomeRoute extends GoRouteData {
+  static const routeName = "/unhome";
+  const UnHomeRoute();
+ @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const UnhomeScreen();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      _buildCustomTransition(context, state, const UnhomeScreen()); 
 }
 
 @TypedGoRoute<LoginRoute>(path: LoginRoute.routeName)

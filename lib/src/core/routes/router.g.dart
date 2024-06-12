@@ -8,6 +8,7 @@ part of 'router.dart';
 
 List<RouteBase> get $appRoutes => [
       $splashRoute,
+      $unHomeRoute,
       $loginRoute,
       $registerRoute,
       $forgetPasswordRoute,
@@ -32,6 +33,28 @@ extension $SplashRouteExtension on SplashRoute {
 
   String get location => GoRouteData.$location(
         '/splash',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $unHomeRoute => GoRouteData.$route(
+      path: '/unhome',
+      factory: $UnHomeRouteExtension._fromState,
+    );
+
+extension $UnHomeRouteExtension on UnHomeRoute {
+  static UnHomeRoute _fromState(GoRouterState state) => const UnHomeRoute();
+
+  String get location => GoRouteData.$location(
+        '/unhome',
       );
 
   void go(BuildContext context) => context.go(location);

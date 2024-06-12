@@ -24,7 +24,7 @@ void useAuthHook({
         if (error.toLowerCase() == "unauthorized" ||
             error.toLowerCase() == "relogin") {
           void logout() {
-            const LoginRoute().go(context);
+            const UnHomeRoute().go(context);
           }
 
           logout();
@@ -78,7 +78,7 @@ void useAuthHookV({
         if (error.toLowerCase() == "unauthorized" &&
             error.toLowerCase() == "relogin") {
           void logout() {
-            const LoginRoute().go(context);
+            const UnHomeRoute().go(context);
           }
 
           logout();

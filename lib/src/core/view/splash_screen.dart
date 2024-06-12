@@ -61,7 +61,7 @@ class SplashScreen extends HookConsumerWidget {
           if (version.value?.needUpdate == false) {
             Future.delayed(
               const Duration(seconds: 2),
-              () => const LoginRoute().go(context),
+              () => const UnHomeRoute().go(context),
             );
           }
         },
