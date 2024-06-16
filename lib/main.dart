@@ -35,6 +35,19 @@ Future<void> bootstrap(Widget app) async {
     sl<PushNotification>().setPushNotificationListeners();
   });
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+
+  // final ref = await initProviderPush();
+
+  // ref.read(pushNotificationProvider).initPushNotification().then(
+  //   (value) {
+  //     log("Initial");
+  //     ref.read(pushNotificationProvider).setPushNotificationListeners();
+  //   },
+  // );
+
+  // FirebaseMessaging.onBackgroundMessage(
+  //   (message) => backgroundHandlerProvider(message),
+  // );
   setPathUrlStrategy();
   runApp(ProviderScope(
     overrides: [

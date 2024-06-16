@@ -26,12 +26,14 @@ class UnhomeScreen extends HookConsumerWidget {
           child: Column(
             children: [
               const Expanded(
-                  child: Column(
-                children: [
-                  CarouselHome(),
-                  CabangSection(),
-                  TreatmentSection(),
-                ],
+                  child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CarouselHome(),
+                    CabangSection(),
+                    TreatmentSection(),
+                  ],
+                ),
               )),
               Padding(
                 padding: const EdgeInsets.all(8).copyWith(bottom: 32),

@@ -70,6 +70,52 @@ Future<void> initPushNotif() async {
   }
 }
 
+@pragma('vm:entry-point')
+Future<void> backgroundHandlerProvider(RemoteMessage message) async {
+  log("[DEBUG]: [firebaseMessaging] -> $message ${message.data} msg from ${message.from}");
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final localNotificationPlugin = FlutterLocalNotificationsPlugin();
+
+  final ref = ProviderContainer(overrides: [
+    localNotificationProvider.overrideWithValue(localNotificationPlugin),
+    pushNotificationProvider.overrideWithValue(IPushNotification(
+        flutterLocalNotificationsPlugin: localNotificationPlugin,
+        firebaseMessaging: FirebaseMessaging.instance))
+  ]);
+
+  await ref.read(pushNotificationProvider).initPushNotification().then((value) {
+    ref
+        .read(pushNotificationProvider)
+        .setPushNotificationListeners(isFromBackground: true);
+  });
+
+  await sl<PushNotification>()
+      .onReceivePushNotification(message: message, isFromBackground: true);
+}
+
+Future<ProviderContainer> initProviderPush() async {
+  final localNotificationPlugin = FlutterLocalNotificationsPlugin();
+
+  final container = ProviderContainer(overrides: [
+    localNotificationProvider.overrideWithValue(localNotificationPlugin),
+    pushNotificationProvider.overrideWithValue(IPushNotification(
+        flutterLocalNotificationsPlugin: localNotificationPlugin,
+        firebaseMessaging: FirebaseMessaging.instance))
+  ]);
+  return container;
+}
+
+final localNotificationProvider =
+    Provider<FlutterLocalNotificationsPlugin>((ref) {
+  return FlutterLocalNotificationsPlugin();
+});
+
+final pushNotificationProvider = Provider<PushNotification>((ref) {
+  return IPushNotification(
+      flutterLocalNotificationsPlugin: ref.watch(localNotificationProvider),
+      firebaseMessaging: FirebaseMessaging.instance);
+});
+
 class IPushNotification implements PushNotification {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final FirebaseMessaging firebaseMessaging;
@@ -216,6 +262,7 @@ class IPushNotification implements PushNotification {
           ),
         );
       }
+      log("Test 123");
 
       // condition to avoid duplicate notification by matching current state
       final currentState = sharedPreferences.getString('appState');
@@ -231,6 +278,7 @@ class IPushNotification implements PushNotification {
         return;
       }
       final androidChannel = getAndroidChannel();
+      log("$flutterLocalNotificationsPlugin HEY KAMu");
       flutterLocalNotificationsPlugin.show(
         remoteNotification.hashCode,
         notificationTitle,
