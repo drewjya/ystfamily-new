@@ -2,7 +2,8 @@
 import 'package:ystfamily/src/features/history/repository/history_repository.dart';
 
 const isProduction = false;
-const baseUrl = 'https://api.ystfamily.com';
+// const baseUrl =  'https://api.ystfamily.com';
+const baseUrl = 'http://10.0.2.2:3000';
 const api = '$baseUrl/api';
 const image = '$baseUrl/img/';
 

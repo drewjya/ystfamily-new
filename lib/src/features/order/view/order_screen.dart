@@ -196,9 +196,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
               "Jenis Kelamin Therapist",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: Gender.values.mapIndexed((index, element) {
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              ...Gender.values.mapIndexed((index, element) {
                 return Padding(
                   padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
                   child: ChoiceChip.elevated(
@@ -207,32 +206,75 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     selected: selectedTherapistGender.value == element,
                     backgroundColor: VColor.primaryBackground.withOpacity(0.5),
                     onSelected: (value) {
-                      selectedTherapistGender.value = element;
+                      final val = element;
+                      if (selectGuestGender.value != null &&
+                          val != selectGuestGender.value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text("Gender Therapist dan Tamu Harus sama"),
+                          ),
+                        );
+                      } else {
+                        selectedTherapistGender.value = element;
+                      }
                     },
                   ),
                 );
-              }).toList(),
-            ),
+              }),
+              const Spacer(),
+              if (selectedTherapistGender.value != null)
+                IconButton(
+                  onPressed: () {
+                    selectGuestGender.value = null;
+                    selectedTherapistGender.value = null;
+                  },
+                  icon: const Icon(Icons.replay_outlined),
+                ),
+            ]),
             const Text(
               "Jenis Kelamin Tamu",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: Gender.values.mapIndexed((index, element) {
-                return Padding(
-                  padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
-                  child: ChoiceChip.elevated(
-                    label: Text(element.value),
-                    selectedColor: VColor.appbarBackground.withOpacity(.7),
-                    selected: selectGuestGender.value == element,
-                    backgroundColor: VColor.primaryBackground.withOpacity(0.5),
-                    onSelected: (value) {
-                      selectGuestGender.value = element;
+              children: [
+                ...Gender.values.mapIndexed((index, element) {
+                  return Padding(
+                    padding: EdgeInsets.only(right: index == 0 ? 8.0 : 0),
+                    child: ChoiceChip.elevated(
+                      label: Text(element.value),
+                      selectedColor: VColor.appbarBackground.withOpacity(.7),
+                      selected: selectGuestGender.value == element,
+                      backgroundColor:
+                          VColor.primaryBackground.withOpacity(0.5),
+                      onSelected: (value) {
+                        final val = element;
+                        if (selectedTherapistGender.value != null &&
+                            val != selectedTherapistGender.value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text("Gender Therapist dan Tamu Harus sama"),
+                            ),
+                          );
+                        } else {
+                          selectGuestGender.value = val;
+                        }
+                      },
+                    ),
+                  );
+                }),
+                const Spacer(),
+                if (selectGuestGender.value != null)
+                  IconButton(
+                    onPressed: () {
+                      selectGuestGender.value = null;
+                      selectedTherapistGender.value = null;
                     },
+                    icon: const Icon(Icons.replay_outlined),
                   ),
-                );
-              }).toList(),
+              ],
             ),
             const Gap(12),
             VCard.horizontal(
@@ -425,7 +467,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                           context: context,
                           isScrollControlled: true,
                           constraints: BoxConstraints(
-                            maxHeight: MediaQuery.sizeOf(context).width,
+                            maxHeight: MediaQuery.sizeOf(context).height * 0.8,
                           ),
                           builder: (context) {
                             return PreviewOrderWidget(
@@ -502,7 +544,6 @@ class PreviewOrderWidget extends ConsumerWidget {
       fontWeight: FontWeight.w400,
     );
     return Container(
-
       decoration: BoxDecoration(
         color: VColor.backgroundColor,
         borderRadius: BorderRadius.circular(10),
