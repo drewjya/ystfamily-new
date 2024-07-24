@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 import 'dart:io';
 
@@ -13,6 +14,9 @@ class RVersion {
   final SVersion? sVersion;
 
   const RVersion({required this.needUpdate, this.sVersion});
+
+  @override
+  String toString() => 'RVersion(needUpdate: $needUpdate, sVersion: $sVersion)';
 }
 
 Future<RVersion> checkVersion(WidgetRef ref) async {
@@ -31,17 +35,26 @@ Future<RVersion> checkVersion(WidgetRef ref) async {
   }
 }
 
-class SplashScreen extends HookConsumerWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashScreen extends ConsumerStatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final version = useState<RVersion?>(null);
+  ConsumerState<ConsumerStatefulWidget> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  RVersion? version;
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen(authProvider, (previous, next) {
       next.when(
         data: (value) async {
-          version.value = await checkVersion(ref);
-          if (version.value?.needUpdate == false) {
+          version = await checkVersion(ref);
+
+          setState(() {});
+          if (version?.needUpdate == false) {
+            log("$version VERSION");
             Future.delayed(
               const Duration(seconds: 2),
               () async {
@@ -52,13 +65,16 @@ class SplashScreen extends HookConsumerWidget {
                 }
               },
             );
+          } else {
+            log("$version VERSION");
           }
         },
         error: (error, stackTrace) async {
-          version.value = await checkVersion(ref);
-
+          version = await checkVersion(ref);
+          setState(() {});
           await FirebaseMessaging.instance.deleteToken();
-          if (version.value?.needUpdate == false) {
+
+          if (version?.needUpdate == false) {
             Future.delayed(
               const Duration(seconds: 2),
               () => const UnHomeRoute().go(context),
@@ -75,7 +91,7 @@ class SplashScreen extends HookConsumerWidget {
       maintainBottomViewPadding: false,
       minimum: const EdgeInsets.all(0),
       child: Scaffold(
-        body: version.value?.needUpdate == true
+        body: version?.needUpdate == true
             ? Center(
                 child: Container(
                   padding: const EdgeInsets.all(8),
@@ -90,14 +106,16 @@ class SplashScreen extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Silahkan update ke versi terbaru"),
+                      const Text(
+                        "Silahkan update ke versi terbaru",
+                      ),
                       ElevatedButton(
                           onPressed: () {
                             launchUrlString(
                               Platform.isIOS
-                                  ? version.value!.sVersion!.appStoreLink
-                                  : version.value!.sVersion!.playStoreLink,
-                              mode: LaunchMode.externalApplication,
+                                  ? version!.sVersion!.appStoreLink
+                                  : version!.sVersion!.playStoreLink,
+                              mode: LaunchMode.externalNonBrowserApplication,
                             );
                           },
                           child: const Text("Update")),
