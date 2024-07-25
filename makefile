@@ -14,4 +14,7 @@ bapk:
 bapp:
 		flutter clean
 		flutter build appbundle --release
-	
+push:
+		git add .
+		git commit -m "update"
+		git push
