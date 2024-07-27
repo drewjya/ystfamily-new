@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:ystfamily/src/core/api/api_exception.dart';
 import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
-import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
 import 'package:ystfamily/src/features/auth/view/register_screen.dart';
 import 'package:ystfamily/src/features/cabang/model/model.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
@@ -81,16 +80,19 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
               barrierDismissible: false,
               builder: (context) => AlertDialog.adaptive(
                 title: const Text("Notifikasi"),
-                content: const Text("Order Anda Berhasil Dibuat"),
-                actions: [
-                  ActionButton(
-                    isFilled: false,
-                    onPressed: () {
-                      const HistoryPageRoute().go(context);
-                    },
-                    text: "Ok",
+                content: Text.rich(
+                  TextSpan(
+                    text:
+                        "Order Anda Berhasil Dibuat. Mohon untuk datang tepat waktu pada pukul ",
+                    style: const TextStyle(),
+                    children: [
+                      TextSpan(
+                          text:
+                              "${jamTerapi.value}, ${selectedDate.value?.getDate()}",
+                          style: const TextStyle(fontWeight: FontWeight.bold))
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           }
