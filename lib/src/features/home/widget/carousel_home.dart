@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ystfamily/src/core/api/api_path.dart';
-import 'package:ystfamily/src/core/core.dart';
+import 'package:ystfamily/src/core/core.dart' ;
 import 'package:ystfamily/src/core/provider/banner_provider.dart';
 import 'package:ystfamily/src/features/home/home.dart';
 
@@ -52,15 +52,6 @@ class CarouselHome extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return Stack(
       children: [
-        Container(
-          height: (MediaQuery.sizeOf(context).height * 0.15),
-          decoration: const BoxDecoration(
-            color: VColor.appbarBackground,
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(40),
-            ),
-          ),
-        ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 12).copyWith(bottom: 0),
           // height: MediaQuery.sizeOf(context).height * 0.21,

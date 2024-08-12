@@ -101,6 +101,7 @@ class OTPScreen extends HookConsumerWidget {
 
     return PopScope(
       canPop: false,
+      
       onPopInvoked: (didPop) async {
         log("$didPop");
         if (didPop) {

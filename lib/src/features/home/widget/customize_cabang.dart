@@ -4,12 +4,12 @@ import 'package:ystfamily/src/features/cabang/cabang.dart';
 import 'package:ystfamily/src/features/cabang/provider/cabang_provider.dart';
 import 'package:ystfamily/src/features/profile/view/edit_profile_screen.dart';
 
-class CabangCard extends ConsumerWidget {
+class CustomizeCabang extends ConsumerWidget {
   final bool start;
   final Cabang cabang;
   final bool isSelected;
   final void Function(Cabang cabang)? onTap;
-  const CabangCard({
+  const CustomizeCabang({
     Key? key,
     this.onTap,
     required this.start,
@@ -32,10 +32,12 @@ class CabangCard extends ConsumerWidget {
                 onTap?.call(cabang);
               }
             : null,
-            
-        backgroundColor: isSelected
-            ? VColor.chipBackground
-            : VColor.appbarBackground.withOpacity(0.7),
+        border: Border.all(
+          color: VColor.chipBackground,
+          strokeAlign: BorderSide.strokeAlignInside,
+          width: 1,
+        ),
+        backgroundColor: Colors.white,
         child: Row(
           children: [
             VCircleImage(

@@ -231,7 +231,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     selectGuestGender.value = null;
                     selectedTherapistGender.value = null;
                   },
-                  icon: const Icon(Icons.replay_outlined),
+                  icon: const Icon(Icons.close),
                 ),
             ]),
             const Text(
@@ -274,7 +274,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                       selectGuestGender.value = null;
                       selectedTherapistGender.value = null;
                     },
-                    icon: const Icon(Icons.replay_outlined),
+                    icon: const Icon(Icons.close),
                   ),
               ],
             ),
@@ -336,6 +336,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                   MultiSelectWidget(
                     data: timeslots.asData?.value?.timeSlot ?? <String>[],
                     displayed: () => jamTerapi.value,
+                    onReset: () {
+                      jamTerapi.value = null;
+                      return [];
+                    },
                     labelText: "Pilih Jam Treatment",
                     maxSelected: 1,
                     icon: const Icon(Icons.access_time),
@@ -347,9 +351,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     },
                     onSelect: (value) {
                       jamTerapi.value = value;
-                      return [jamTerapi.value ?? ""];
+                      log("${jamTerapi.value}");
+                      return jamTerapi.value != null ? [jamTerapi.value!] : [];
                     },
-                    selected: [jamTerapi.value ?? ""],
+                    selected: jamTerapi.value != null ? [jamTerapi.value!] : [],
                   ),
                   const Gap(4),
                   const Text(
@@ -358,6 +363,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                   ),
                   MultiSelectWidget<TreatmentCabang>(
                     isSearchable: true,
+                    onReset: () {
+                      selectedTreatment.value = {};
+                      return [];
+                    },
                     data: (treatmentCabang ?? <TreatmentCabang>[])
                         .where(
                             (element) => !element.treatment.category.optional)
@@ -376,7 +385,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     onRemove: (value) {
                       selectedTreatment.value = {
                         ...selectedTreatment.value.where((element) =>
-                            element.treatment.id != value.treatment.id)
+                            element.treatment.id != value?.treatment.id)
                       };
                       return selectedTreatment.value.toList();
                     },
@@ -400,6 +409,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                         .where((element) => element.treatment.category.optional)
                         .map((e) => e)
                         .toList(),
+                    onReset: () {
+                      selectedAdditional.value = {};
+                      return [];
+                    },
                     displayed: () => selectedAdditional.value.isEmpty
                         ? null
                         : selectedAdditional.value
@@ -411,7 +424,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                     onRemove: (value) {
                       selectedAdditional.value = {
                         ...selectedAdditional.value.where((element) =>
-                            element.treatment.id != value.treatment.id)
+                            element.treatment.id != value?.treatment.id)
                       };
                       return selectedAdditional.value.toList();
                     },
@@ -556,16 +569,35 @@ class PreviewOrderWidget extends ConsumerWidget {
       child: DefaultTextStyle(
         style: style,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "PREVIEW",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w500,
-                color: VColor.primaryTextColor,
+            const Center(
+              child: Text(
+                "PREVIEW",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  color: VColor.primaryTextColor,
+                ),
               ),
             ),
             const Gap(24),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: VColor.chipBackground,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                "Mohon periksa kembali detail reservasi anda!!",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w900,
+                  color: VColor.primaryTextColor,
+                ),
+              ),
+            ),
+            const Gap(12),
             RowItem(
               title: "Cabang",
               titleStyle: titleStyle,
@@ -724,164 +756,182 @@ class _SelectTherapistState extends State<SelectTherapist> {
   Widget build(BuildContext context) {
     return VCard.horizontal(
       backgroundColor: VColor.cardBackground,
-      onTap: () async {
-        String errorText = "";
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: Consumer(builder: (context, ref, child) {
-                return StatefulBuilder(builder: (context, setState2) {
-                  final therapists = ref.watch(therapistProvider);
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    height: MediaQuery.sizeOf(context).height * 0.5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            "Pilih Therapist (Opsional)",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: VColor.primaryTextColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const Gap(12),
-                        if (errorText.isNotEmpty) ...{
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(
-                              errorText,
-                              style: const TextStyle(
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          const Gap(4),
-                        },
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0, horizontal: 8),
-                          child: TextField(
-                            onChanged: (value) async {
-                              widget.onSearch(value);
-                            },
-                            decoration: inputStyle.copyWith(
-                              contentPadding: const EdgeInsets.all(12),
-                              fillColor: VColor.cardBackground,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                              hintText: 'Cari...',
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Gap(6),
-                        Expanded(
-                            child: therapists.when(
-                          data: (data) {
-                            return ListView.builder(
-                              itemCount: data.length,
-                              physics: const AlwaysScrollableScrollPhysics(
-                                  parent: BouncingScrollPhysics()),
-                              itemBuilder: (context, index) {
-                                final isSelected =
-                                    data[index].id == widget.selected?.id;
-                                return TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: isSelected
-                                        ? VColor.chipBackground
-                                        : null,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    if (isSelected) {
-                                      setState2(() {
-                                        currSelected =
-                                            widget.onRemove(data[index]);
-                                        errorText = "";
-                                      });
-                                      Navigator.pop(context);
-                                    } else {
-                                      currSelected =
-                                          widget.onRemove(data[index]);
-                                      currSelected =
-                                          widget.onSelected(data[index]);
-                                      errorText = "";
-                                      Navigator.pop(context);
-                                      return;
-                                    }
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          data[index].nama,
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: VColor.primaryTextColor,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                          maxLines: 2,
-                                          textAlign: TextAlign.start,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          error: (error, stackTrace) => Center(
-                            child: Text("$error"),
-                          ),
-                          loading: () => const LoadingWidget(),
-                        )),
-                      ],
-                    ),
-                  );
-                });
-              }),
-            );
-          },
-        );
-        setState(() {});
-      },
+      padding: EdgeInsets.zero,
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              widget.selected?.nama ?? "Pilih Therapist (Opsional)",
-              style: const TextStyle(
-                fontSize: 16,
-                color: VColor.primaryTextColor,
-                fontWeight: FontWeight.w500,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () async {
+                String errorText = "";
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      child: Consumer(builder: (context, ref, child) {
+                        return StatefulBuilder(builder: (context, setState2) {
+                          final therapists = ref.watch(therapistProvider);
+                          return Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            height: MediaQuery.sizeOf(context).height * 0.5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: Text(
+                                    "Pilih Therapist (Opsional)",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: VColor.primaryTextColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const Gap(12),
+                                if (errorText.isNotEmpty) ...{
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text(
+                                      errorText,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  const Gap(4),
+                                },
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8),
+                                  child: TextField(
+                                    onChanged: (value) async {
+                                      widget.onSearch(value);
+                                    },
+                                    decoration: inputStyle.copyWith(
+                                      contentPadding: const EdgeInsets.all(12),
+                                      fillColor: VColor.cardBackground,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                      hintText: 'Cari...',
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Gap(6),
+                                Expanded(
+                                    child: therapists.when(
+                                  data: (data) {
+                                    return ListView.builder(
+                                      itemCount: data.length,
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(
+                                              parent: BouncingScrollPhysics()),
+                                      itemBuilder: (context, index) {
+                                        final isSelected = data[index].id ==
+                                            widget.selected?.id;
+                                        return TextButton(
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: isSelected
+                                                ? VColor.chipBackground
+                                                : null,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            if (isSelected) {
+                                              setState2(() {
+                                                currSelected = widget
+                                                    .onRemove(data[index]);
+                                                errorText = "";
+                                              });
+                                              Navigator.pop(context);
+                                            } else {
+                                              currSelected =
+                                                  widget.onRemove(data[index]);
+                                              currSelected = widget
+                                                  .onSelected(data[index]);
+                                              errorText = "";
+                                              Navigator.pop(context);
+                                              return;
+                                            }
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  data[index].nama,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color:
+                                                        VColor.primaryTextColor,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  error: (error, stackTrace) => Center(
+                                    child: Text("$error"),
+                                  ),
+                                  loading: () => const LoadingWidget(),
+                                )),
+                              ],
+                            ),
+                          );
+                        });
+                      }),
+                    );
+                  },
+                );
+                setState(() {});
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  widget.selected?.nama ?? "Pilih Therapist (Opsional)",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: VColor.primaryTextColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 2,
+                ),
               ),
-              maxLines: 2,
             ),
           ),
+          if (widget.selected != null)
+            IconButton(
+              onPressed: () {
+                widget.onRemove.call(widget.selected!);
+              },
+              icon: const Icon(Icons.close),
+            ),
         ],
       ),
     );
@@ -901,6 +951,7 @@ class MultiSelectWidget<T> extends StatefulWidget {
     required this.onRemove,
     required this.displayed,
     required this.selected,
+    required this.onReset,
     this.onSearch,
     this.isSearchable = false,
   });
@@ -913,8 +964,9 @@ class MultiSelectWidget<T> extends StatefulWidget {
   final String Function(T value) onDisplay;
   final Widget? iconDropdown;
   final int maxSelected;
-  final List<T> Function(T value) onRemove;
+  final List<T> Function(T? value) onRemove;
   final List<T> Function(T value) onSelect;
+  final List<T> Function() onReset;
   final String? Function() displayed;
   final bool isSearchable;
 
@@ -941,198 +993,255 @@ class _MultiSelectWidgetState<T> extends State<MultiSelectWidget<T>> {
   Widget build(BuildContext context) {
     return VCard.horizontal(
       backgroundColor: VColor.cardBackground,
-      onTap: () async {
-        String searched = "";
-        String errorText = "";
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: StatefulBuilder(builder: (context, setState2) {
-                List<T> searchData = widget.data;
-                if (widget.isSearchable && widget.onSearch == null) {
-                  searchData = widget.data
-                      .where((element) => widget
-                          .onDisplay(element)
-                          .toLowerCase()
-                          .contains(searched.toLowerCase()))
-                      .toList();
-                }
-                return Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  height: MediaQuery.sizeOf(context).height * 0.5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          widget.labelText,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: VColor.primaryTextColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const Gap(12),
-                      if (errorText.isNotEmpty) ...{
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            errorText,
-                            style: const TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                        const Gap(4),
-                      },
-                      if (widget.isSearchable) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0, horizontal: 8),
-                          child: TextField(
-                            onChanged: (value) async {
-                              setState2(() {
-                                searched = value;
-                              });
-                              if (widget.onSearch == null) {
-                                return;
-                              }
-                              setState2(() async {
-                                searchData = await widget.onSearch!(value);
-                              });
-                            },
-                            decoration: inputStyle.copyWith(
-                              contentPadding: const EdgeInsets.all(12),
-                              fillColor: VColor.cardBackground,
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                              hintText: 'Cari...',
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: const BorderSide(
-                                  color: VColor.cardBackground,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Gap(6),
-                      ],
-                      Expanded(
-                        child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(
-                              parent: BouncingScrollPhysics()),
-                          itemCount: searchData.length,
-                          itemBuilder: (context, index) {
-                            log("$currSelected");
-                            final isSelected =
-                                currSelected.contains(searchData[index]);
-                            return TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor:
-                                    isSelected ? VColor.chipBackground : null,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              onPressed: () {
-                                if (isSelected) {
-                                  setState2(() {
-                                    currSelected =
-                                        widget.onRemove(searchData[index]);
-                                    log("$currSelected");
-                                    errorText = "";
-                                  });
-                                  if (widget.maxSelected == 1) {
-                                    Navigator.pop(context);
-                                  }
-                                } else {
-                                  setState2(() {
-                                    if (widget.maxSelected == 1) {
-                                      currSelected = widget
-                                          .onRemove(widget.selected.first);
-                                      currSelected =
-                                          widget.onSelect(searchData[index]);
-                                      errorText = "";
-                                      Navigator.pop(context);
-                                      return;
-                                    }
-                                    if (widget.maxSelected >
-                                        currSelected.length) {
-                                      currSelected =
-                                          widget.onSelect(searchData[index]);
-                                      errorText = "";
-                                    } else {
-                                      errorText =
-                                          "Maksimal ${widget.maxSelected} item";
-                                    }
-                                  });
-                                }
-                              },
-                              child: Row(
-                                children: [
-                                  if (widget.iconDropdown != null) ...[
-                                    widget.iconDropdown!,
-                                    const Gap(8),
-                                  ],
-                                  Expanded(
-                                    child: Text(
-                                      widget.onDisplay(searchData[index]),
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: VColor.primaryTextColor,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      maxLines: 2,
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            );
-          },
-        );
-        setState(() {});
-      },
+      padding: EdgeInsets.zero,
       child: Row(
         children: [
-          if (widget.icon != null) ...[
-            widget.icon!,
-            const Gap(8),
-          ],
           Expanded(
-            child: Text(
-              widget.displayed() ?? widget.labelText,
-              style: const TextStyle(
-                fontSize: 16,
-                color: VColor.primaryTextColor,
-                fontWeight: FontWeight.w500,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () async {
+                String searched = "";
+                String errorText = "";
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      child: StatefulBuilder(builder: (context, setState2) {
+                        List<T> searchData = widget.data;
+                        if (widget.isSearchable && widget.onSearch == null) {
+                          searchData = widget.data
+                              .where((element) => widget
+                                  .onDisplay(element)
+                                  .toLowerCase()
+                                  .contains(searched.toLowerCase()))
+                              .toList();
+                        }
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          height: MediaQuery.sizeOf(context).height * 0.5,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Text(
+                                  widget.labelText,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: VColor.primaryTextColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const Gap(12),
+                              if (errorText.isNotEmpty) ...{
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text(
+                                    errorText,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                const Gap(4),
+                              },
+                              if (widget.isSearchable) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 8),
+                                  child: TextField(
+                                    onChanged: (value) async {
+                                      setState2(() {
+                                        searched = value;
+                                      });
+                                      if (widget.onSearch == null) {
+                                        return;
+                                      }
+                                      setState2(() async {
+                                        searchData =
+                                            await widget.onSearch!(value);
+                                      });
+                                    },
+                                    decoration: inputStyle.copyWith(
+                                      contentPadding: const EdgeInsets.all(12),
+                                      fillColor: VColor.cardBackground,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                      hintText: 'Cari...',
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: const BorderSide(
+                                          color: VColor.cardBackground,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Gap(6),
+                              ],
+                              Expanded(
+                                child: ListView.builder(
+                                  physics: const AlwaysScrollableScrollPhysics(
+                                      parent: BouncingScrollPhysics()),
+                                  itemCount: searchData.length,
+                                  itemBuilder: (context, index) {
+                                    log("$currSelected");
+                                    final isSelected = currSelected
+                                        .contains(searchData[index]);
+                                    return Row(
+                                      children: [
+                                        const Gap(5),
+                                        Expanded(
+                                          child: TextButton(
+                                            style: TextButton.styleFrom(
+                                              backgroundColor: isSelected
+                                                  ? VColor.chipBackground
+                                                  : null,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              if (isSelected) {
+                                                setState2(() {
+                                                  currSelected =
+                                                      widget.onRemove(
+                                                          searchData[index]);
+                                                  log("$currSelected");
+                                                  errorText = "";
+                                                });
+                                                if (widget.maxSelected == 1) {
+                                                  Navigator.pop(context);
+                                                }
+                                              } else {
+                                                setState2(() {
+                                                  if (widget.maxSelected == 1) {
+                                                    final isNotEmpty = widget
+                                                        .selected.isNotEmpty;
+                                                    currSelected = widget
+                                                        .onRemove(isNotEmpty
+                                                            ? widget
+                                                                .selected.first
+                                                            : null);
+                                                    currSelected =
+                                                        widget.onSelect(
+                                                            searchData[index]);
+                                                    errorText = "";
+                                                    Navigator.pop(context);
+                                                    return;
+                                                  }
+                                                  if (widget.maxSelected >
+                                                      currSelected.length) {
+                                                    currSelected =
+                                                        widget.onSelect(
+                                                            searchData[index]);
+                                                    errorText = "";
+                                                  } else {
+                                                    errorText =
+                                                        "Maksimal ${widget.maxSelected} item";
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                if (widget.iconDropdown !=
+                                                    null) ...[
+                                                  widget.iconDropdown!,
+                                                  const Gap(8),
+                                                ],
+                                                Expanded(
+                                                  child: Text(
+                                                    widget.onDisplay(
+                                                        searchData[index]),
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      color: VColor
+                                                          .primaryTextColor,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                    maxLines: 2,
+                                                    textAlign: TextAlign.start,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        if (isSelected)
+                                          IconButton(
+                                            onPressed: () {
+                                              setState2(() {
+                                                currSelected = widget.onRemove(
+                                                    searchData[index]);
+                                                log("$currSelected");
+                                                errorText = "";
+                                              });
+                                              if (widget.maxSelected == 1) {
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            icon: const Icon(Icons.close),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    );
+                  },
+                );
+                setState(() {});
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    if (widget.icon != null) ...[
+                      widget.icon!,
+                      const Gap(8),
+                    ],
+                    Expanded(
+                      child: Text(
+                        widget.displayed() ?? widget.labelText,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: VColor.primaryTextColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              maxLines: 2,
             ),
           ),
+          if (widget.selected.isNotEmpty == true)
+            IconButton(
+              onPressed: () =>
+                  setState(() => currSelected = widget.onReset.call()),
+              icon: const Icon(Icons.close),
+            )
         ],
       ),
     );

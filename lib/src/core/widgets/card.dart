@@ -9,11 +9,15 @@ class VCard extends StatelessWidget {
   final double? width;
   final BorderRadius? borderRadius;
   final double elevation;
+  final BoxBorder? border;
   final Color? backgroundColor;
 
+  final EdgeInsets? padding;
   const VCard({
     Key? key,
     this.onTap,
+    this.padding,
+    this.border,
     required this.vertical,
     this.child,
     this.height,
@@ -26,7 +30,9 @@ class VCard extends StatelessWidget {
   factory VCard.vertical({
     VoidCallback? onTap,
     Widget? child,
+    BoxBorder? border,
     double? height,
+    EdgeInsets? padding,
     double? width,
     double elevation = 1,
     Color? backgroundColor,
@@ -37,7 +43,9 @@ class VCard extends StatelessWidget {
         onTap: onTap,
         elevation: elevation,
         height: height,
+        border: border,
         width: width,
+        padding: padding,
         borderRadius: borderRadius,
         backgroundColor: backgroundColor,
         child: child,
@@ -46,12 +54,16 @@ class VCard extends StatelessWidget {
     VoidCallback? onTap,
     Widget? child,
     double? height,
+    EdgeInsets? padding,
     double? width,
+    BoxBorder? border,
     double elevation = 1,
     BorderRadius? borderRadius = const BorderRadius.all(Radius.circular(12)),
     Color? backgroundColor,
   }) =>
       VCard(
+        border: border,
+        padding: padding,
         backgroundColor: backgroundColor,
         vertical: false,
         onTap: onTap,
@@ -72,10 +84,11 @@ class VCard extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
-            color: backgroundColor ?? VColor.primaryBackground.withOpacity(0.5),
-            borderRadius: borderRadius,
-          ),
-          padding: const EdgeInsets.all(12),
+              color:
+                  backgroundColor ?? VColor.primaryBackground.withOpacity(0.5),
+              borderRadius: borderRadius,
+              border: border),
+          padding: padding ?? const EdgeInsets.all(12),
           height: () {
             if (height == null) {
               return vertical ? double.infinity : null;
