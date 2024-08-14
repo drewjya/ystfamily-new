@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class OrderDetail {
+class OrderDetailModel {
   final String orderId;
   final int id;
   final String orderTime;
@@ -19,7 +19,7 @@ class OrderDetail {
   final String createdAt;
   final String? picture;
   final String? confirmationTime;
-  OrderDetail({
+  OrderDetailModel({
     required this.createdAt,
     this.picture,
     this.confirmationTime,
@@ -38,7 +38,7 @@ class OrderDetail {
     required this.totalPrice,
   });
 
-  OrderDetail copyWith({
+  OrderDetailModel copyWith({
     String? createdAt,
     String? picture,
     String? confirmationTime,
@@ -56,7 +56,7 @@ class OrderDetail {
     List<OrderDetailData>? orderDetail,
     int? totalPrice,
   }) {
-    return OrderDetail(
+    return OrderDetailModel(
       createdAt: createdAt ?? this.createdAt,
       picture: picture ?? this.picture,
       confirmationTime: confirmationTime ?? this.confirmationTime,
@@ -76,8 +76,8 @@ class OrderDetail {
     );
   }
 
-  factory OrderDetail.fromMap(Map<String, dynamic> map) {
-    return OrderDetail(
+  factory OrderDetailModel.fromMap(Map<String, dynamic> map) {
+    return OrderDetailModel(
       createdAt: map['createdAt'] as String,
       confirmationTime: map['confirmationTime'] as String?,
       picture: map['picture'] as String?,
@@ -103,8 +103,8 @@ class OrderDetail {
     );
   }
 
-  factory OrderDetail.fromJson(String source) =>
-      OrderDetail.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory OrderDetailModel.fromJson(String source) =>
+      OrderDetailModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -112,7 +112,7 @@ class OrderDetail {
   }
 
   @override
-  bool operator ==(covariant OrderDetail other) {
+  bool operator ==(covariant OrderDetailModel other) {
     if (identical(this, other)) return true;
 
     return other.orderId == orderId &&

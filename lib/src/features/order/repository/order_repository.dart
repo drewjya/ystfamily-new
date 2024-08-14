@@ -10,7 +10,7 @@ import '../../auth/view/register_screen.dart';
 import '../model/order_dto.dart';
 
 abstract class OrderRepository {
-  Future<OrderDetail> getDetailOrder({required int orderId});
+  Future<OrderDetailModel> getDetailOrder({required int orderId});
   Future<String> postBuktiPembayaranMobile(
       {required int orderId, required XFile file});
   Future<TimeSlot> getTimeSlot({

@@ -1,6 +1,3 @@
-import 'package:ystfamily/src/core/api/api_exception.dart';
-import 'package:ystfamily/src/core/api/api_path.dart';
-import 'package:ystfamily/src/core/common/auth_hook.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/auth/provider/delete_account.dart';
@@ -12,8 +9,8 @@ class ProfilePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider);
-    final isLoading = useState(false);
     useAuthHook(ref: ref, context: context);
+    final isLoading = useState(false);
     ref.listen(deleteAccountProvider, (previous, next) {
       next.when(data: (data) {
         if (isLoading.value) {

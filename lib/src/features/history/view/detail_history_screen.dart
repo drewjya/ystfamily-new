@@ -2,16 +2,14 @@
 import "package:cached_network_image/cached_network_image.dart";
 import 'package:collection/collection.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ystfamily/src/core/api/api_path.dart';
-import 'package:ystfamily/src/core/common/image_picker.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
 import 'package:ystfamily/src/features/order/model/order_detail.dart';
 import 'package:ystfamily/src/features/order/order.dart';
-import 'package:ystfamily/src/features/order/provider/detail_order_provider.dart';
-import 'package:ystfamily/src/features/order/provider/order_provider.dart';
 
-_convertOrder(OrderDetail detail) {
+import 'history_page.dart';
+
+_convertOrder(OrderDetailModel detail) {
   if (detail.picture == null) {
     return "Menunggu Pembayaran";
   }

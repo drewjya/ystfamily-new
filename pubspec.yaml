@@ -71,6 +71,7 @@ dependencies:
   pinput: ^5.0.0
   carousel_slider: ^5.0.0
   flutter_local_notifications: ^17.2.2
+  google_fonts: ^6.2.1
   
   
 

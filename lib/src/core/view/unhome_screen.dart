@@ -19,7 +19,7 @@ class UnhomeScreen extends HookConsumerWidget {
           backgroundColor: VColor.appbarBackground,
           foregroundColor: VColor.darkBrown,
           centerTitle: true,
-          title: Image.asset("assets/logo.png", width: 60),
+          title: const TitleWidget(),
         ),
         body: Container(
           color: Colors.white,

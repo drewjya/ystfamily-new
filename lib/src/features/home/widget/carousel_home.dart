@@ -2,9 +2,7 @@
 import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ystfamily/src/core/api/api_path.dart';
 import 'package:ystfamily/src/core/core.dart' ;
-import 'package:ystfamily/src/core/provider/banner_provider.dart';
 import 'package:ystfamily/src/features/home/home.dart';
 
 class ImageSliders extends StatelessWidget {

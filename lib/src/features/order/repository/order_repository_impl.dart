@@ -22,10 +22,10 @@ class OrderRepositoryImpl implements OrderRepository {
   });
 
   @override
-  Future<OrderDetail> getDetailOrder({required int orderId}) async {
+  Future<OrderDetailModel> getDetailOrder({required int orderId}) async {
     final res = await request.get(
         url: OrderPath.orderDetail(orderId), isAuth: true, isRefresh: false);
-    return OrderDetail.fromMap(res.data);
+    return OrderDetailModel.fromMap(res.data);
   }
 
   @override

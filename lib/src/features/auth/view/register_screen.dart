@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:ystfamily/src/core/api/api_exception.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/model/dto/register_dto.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';

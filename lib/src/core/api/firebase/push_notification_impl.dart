@@ -10,9 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ystfamily/firebase_options.dart';
 import 'package:ystfamily/main.dart';
-import 'package:ystfamily/src/core/api/firebase/push_notification.dart';
 import 'package:ystfamily/src/core/core.dart';
-import 'package:ystfamily/src/core/provider/pref_const.dart';
 
 String getNotificationTitle({String? value}) {
   if (value == "webinar") {

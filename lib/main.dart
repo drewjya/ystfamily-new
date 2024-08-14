@@ -7,11 +7,7 @@ import 'package:pwa_install/pwa_install.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:ystfamily/firebase_options.dart';
-import 'package:ystfamily/src/core/api/firebase/push_notification.dart';
-import 'package:ystfamily/src/core/api/firebase/push_notification_impl.dart';
 import 'package:ystfamily/src/core/core.dart';
-import 'package:ystfamily/src/core/provider/pref_provider.dart';
-import 'package:ystfamily/src/core/widgets/lifecycle_manager.dart';
 
 final sl = GetIt.instance;
 

@@ -1,6 +1,6 @@
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/history/model/history_order.dart';
-import 'package:ystfamily/src/features/order/order.dart';
+import 'package:ystfamily/src/features/history/view/history_page.dart';
 
 class HistoryCard extends StatelessWidget {
   final HistoryOrder history;
@@ -34,22 +34,21 @@ class HistoryCard extends StatelessWidget {
                 ),
               ),
               Container(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Text(
-                    history.orderStatus,
-                    style: const TextStyle(
-                      color: VColor.secondaryBackground,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Text(
+                  history.orderStatus,
+                  style: const TextStyle(
+                    color: VColor.secondaryBackground,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              
+              ),
             ],
           ),
           const Gap(

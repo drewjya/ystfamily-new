@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:ystfamily/src/core/api/api_exception.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/model/dto/login_dto.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';

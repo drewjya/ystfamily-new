@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:ystfamily/src/core/common/auth_dialog.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/auth_provider.dart';
 import 'package:ystfamily/src/features/cabang/cabang.dart';

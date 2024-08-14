@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:pinput/pinput.dart';
-import 'package:ystfamily/src/core/api/api_exception.dart';
-import 'package:ystfamily/src/core/config/theme.dart';
 import 'package:ystfamily/src/core/core.dart';
 import 'package:ystfamily/src/features/auth/provider/otp_provider.dart';
 import 'package:ystfamily/src/features/auth/view/otp_screen.dart';
@@ -14,6 +12,7 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
   });
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     useEffect(() {
       Future.microtask(() => ref.invalidate(verifyOtpProvider));
       return;
@@ -78,7 +77,7 @@ class OTPConfirmationPasswordScreen extends HookConsumerWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, val) async {
         if (didPop) {
           return;
         }

@@ -30,10 +30,10 @@ class _SystemHash {
 }
 
 abstract class _$DetailOrder
-    extends BuildlessAutoDisposeAsyncNotifier<OrderDetail> {
+    extends BuildlessAutoDisposeAsyncNotifier<OrderDetailModel> {
   late final int id;
 
-  FutureOr<OrderDetail> build(
+  FutureOr<OrderDetailModel> build(
     int id,
   );
 }
@@ -43,7 +43,7 @@ abstract class _$DetailOrder
 const detailOrderProvider = DetailOrderFamily();
 
 /// See also [DetailOrder].
-class DetailOrderFamily extends Family<AsyncValue<OrderDetail>> {
+class DetailOrderFamily extends Family<AsyncValue<OrderDetailModel>> {
   /// See also [DetailOrder].
   const DetailOrderFamily();
 
@@ -81,8 +81,8 @@ class DetailOrderFamily extends Family<AsyncValue<OrderDetail>> {
 }
 
 /// See also [DetailOrder].
-class DetailOrderProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<DetailOrder, OrderDetail> {
+class DetailOrderProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    DetailOrder, OrderDetailModel> {
   /// See also [DetailOrder].
   DetailOrderProvider(
     int id,
@@ -113,7 +113,7 @@ class DetailOrderProvider
   final int id;
 
   @override
-  FutureOr<OrderDetail> runNotifierBuild(
+  FutureOr<OrderDetailModel> runNotifierBuild(
     covariant DetailOrder notifier,
   ) {
     return notifier.build(
@@ -138,7 +138,7 @@ class DetailOrderProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<DetailOrder, OrderDetail>
+  AutoDisposeAsyncNotifierProviderElement<DetailOrder, OrderDetailModel>
       createElement() {
     return _DetailOrderProviderElement(this);
   }
@@ -157,14 +157,14 @@ class DetailOrderProvider
   }
 }
 
-mixin DetailOrderRef on AutoDisposeAsyncNotifierProviderRef<OrderDetail> {
+mixin DetailOrderRef on AutoDisposeAsyncNotifierProviderRef<OrderDetailModel> {
   /// The parameter `id` of this provider.
   int get id;
 }
 
 class _DetailOrderProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<DetailOrder, OrderDetail>
-    with DetailOrderRef {
+    extends AutoDisposeAsyncNotifierProviderElement<DetailOrder,
+        OrderDetailModel> with DetailOrderRef {
   _DetailOrderProviderElement(super.provider);
 
   @override

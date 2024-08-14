@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ystfamily/src/core/config/color.dart';
 import 'package:ystfamily/src/core/routes/router.dart';
@@ -39,7 +40,7 @@ class HomeScreen extends HookConsumerWidget {
                 backgroundColor: VColor.appbarBackground,
                 foregroundColor: VColor.darkBrown,
                 centerTitle: true,
-                title: Image.asset("assets/logo.png", width: 60),
+                title: const TitleWidget(),
                 actions: [
                   IconButton(
                     onPressed: () {
@@ -123,6 +124,34 @@ class HomeScreen extends HookConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TitleWidget extends StatelessWidget {
+  const TitleWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "YANG SHEN TANG",
+          style: GoogleFonts.dmSans(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          "FAMILY REFLEXOLOGY",
+          style: GoogleFonts.dmSans(
+            fontWeight: FontWeight.w400,
+            fontSize: 13,
+          ),
+        ),
+      ],
     );
   }
 }
