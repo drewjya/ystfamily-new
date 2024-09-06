@@ -50,6 +50,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     ref.listen(authProvider, (previous, next) {
       next.when(
         data: (value) async {
+          await FirebaseMessaging.instance.getToken().then((value) async {
+            if (value != null) {
+              await ref
+                  .read(authRepositoryProvider)
+                  .sendTokenFirebase(token: value);
+            }
+          });
           version = await checkVersion(ref);
 
           setState(() {});
