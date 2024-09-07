@@ -113,6 +113,13 @@ class PreviewOrderWidget extends ConsumerWidget {
               value: preview.guestGender.gender,
             ),
             const Gap(13),
+            RowItem(
+              title: "No WA Tamu",
+              titleStyle: titleStyle,
+              valueStyle: valueStyle,
+              value: dto.phoneNumber,
+            ),
+            const Gap(13),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

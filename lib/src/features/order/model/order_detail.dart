@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,8 @@ class OrderDetailModel {
   final String therapistGender;
   final String? therapist;
   final String cabang;
+  final String cabangPhone;
+  final String guestPhone;
   final int cabangId;
   final int durasi;
   final UserSimple user;
@@ -20,22 +23,24 @@ class OrderDetailModel {
   final String? picture;
   final String? confirmationTime;
   OrderDetailModel({
-    required this.createdAt,
-    this.picture,
-    this.confirmationTime,
     required this.orderId,
-    this.therapist,
     required this.id,
     required this.orderTime,
     required this.orderStatus,
     required this.guestGender,
     required this.therapistGender,
+    this.therapist,
     required this.cabang,
+    required this.cabangPhone,
+    required this.guestPhone,
     required this.cabangId,
     required this.durasi,
     required this.user,
     required this.orderDetail,
     required this.totalPrice,
+    required this.createdAt,
+    this.picture,
+    this.confirmationTime,
   });
 
   OrderDetailModel copyWith({
@@ -45,6 +50,8 @@ class OrderDetailModel {
     String? orderId,
     int? id,
     String? orderTime,
+    String? cabangPhone,
+    String? guestPhone,
     String? orderStatus,
     String? guestGender,
     String? therapistGender,
@@ -61,6 +68,8 @@ class OrderDetailModel {
       picture: picture ?? this.picture,
       confirmationTime: confirmationTime ?? this.confirmationTime,
       therapist: therapist ?? this.therapist,
+      cabangPhone: cabangPhone ?? this.cabangPhone,
+      guestPhone: guestPhone ?? this.guestPhone,
       orderId: orderId ?? this.orderId,
       id: id ?? this.id,
       orderTime: orderTime ?? this.orderTime,
@@ -83,6 +92,8 @@ class OrderDetailModel {
       picture: map['picture'] as String?,
       orderId: map['orderId'] as String,
       id: map['id'] as int,
+      cabangPhone: map['cabangPhone'] as String,
+      guestPhone: map['guestPhone'] as String,
       orderTime: map['orderTime'] as String,
       orderStatus: map['orderStatus'] as String,
       guestGender: map['guestGender'] as String,

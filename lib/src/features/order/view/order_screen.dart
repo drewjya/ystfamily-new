@@ -72,20 +72,29 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
             showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (context) => AlertDialog.adaptive(
-                title: const Text("Notifikasi"),
-                content: Text.rich(
-                  TextSpan(
-                    text:
-                        "Order Anda Berhasil Dibuat. Mohon untuk datang tepat waktu pada pukul ",
-                    style: const TextStyle(),
-                    children: [
-                      TextSpan(
-                          text:
-                              "${jamTerapi.value}, ${selectedDate.value?.getDate()}",
-                          style: const TextStyle(fontWeight: FontWeight.bold))
-                    ],
+              builder: (context) => PopScope(
+                canPop: false,
+                child: AlertDialog.adaptive(
+                  title: const Text("Notifikasi"),
+                  content: Text.rich(
+                    TextSpan(
+                      text:
+                          "Order Anda Berhasil Dibuat. Mohon untuk datang tepat waktu pada pukul ",
+                      style: const TextStyle(),
+                      children: [
+                        TextSpan(
+                            text:
+                                "${jamTerapi.value}, ${selectedDate.value?.getDate()}",
+                            style: const TextStyle(fontWeight: FontWeight.bold))
+                      ],
+                    ),
                   ),
+                  actions: [
+                    VCard.horizontal(
+                      child: const Text("OK"),
+                      onTap: () => const HomePageRoute().go(context),
+                    )
+                  ],
                 ),
               ),
             );
@@ -107,8 +116,11 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
             context: context,
             barrierDismissible: false,
             builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return const PopScope(
+                canPop: false,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             },
           );
@@ -289,6 +301,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
             ),
             const Gap(12),
             CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
               value: sameWithProfile.value,
               onChanged: (value) {
                 sameWithProfile.value = value ?? false;
@@ -296,9 +309,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                   waController.text = user?.phoneNumber ?? "";
                 }
               },
+              visualDensity: const VisualDensity(horizontal: -3, vertical: -4),
+              contentPadding: const EdgeInsets.all(0),
               title: const Text("Sama dengan akun"),
             ),
-            const Gap(12),
             const Gap(12),
             VCard.horizontal(
               backgroundColor: VColor.appbarBackground.withOpacity(.7),
@@ -468,7 +482,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                       selectedTreatment.value.isNotEmpty &&
                       selectedDate.value != null &&
                       selectedTherapistGender.value != null &&
-                      selectGuestGender.value != null
+                      selectGuestGender.value != null &&
+                      waController.text.isNotEmpty
                   ? null
                   : Colors.grey,
               onTap: jamTerapi.value != null
@@ -484,6 +499,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen>
                       );
                       final format = DateFormat("yyyy-MM-dd");
                       final dto = OrderDto(
+                          phoneNumber: waController.text,
                           cabangId: cabang.id,
                           guestGender: selectGuestGender.value!.nama,
                           orderDate: format.format(selectedDate.value!),

@@ -211,6 +211,14 @@ class DetailHistoryScreen extends HookConsumerWidget {
                           const Gap(12),
                           Row(
                             children: [
+                              const Text("Nomor Telepon Cabang"),
+                              const Spacer(),
+                              Text(data.cabangPhone),
+                            ],
+                          ),
+                          const Gap(12),
+                          Row(
+                            children: [
                               const Text("Therapist"),
                               const Spacer(),
                               Text(
@@ -223,6 +231,14 @@ class DetailHistoryScreen extends HookConsumerWidget {
                               const Text("Tamu"),
                               const Spacer(),
                               Text(data.guestGender.gender),
+                            ],
+                          ),
+                          const Gap(12),
+                          Row(
+                            children: [
+                              const Text("No Wa Tamu"),
+                              const Spacer(),
+                              Text(data.guestPhone),
                             ],
                           ),
                         ],

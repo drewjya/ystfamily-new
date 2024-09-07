@@ -11,6 +11,7 @@ class OrderDto {
   final String guestGender;
   final String therapistGender;
   final List<int> treatmentDetail;
+  final String phoneNumber;
   OrderDto({
     required this.orderDate,
     required this.orderTime,
@@ -19,6 +20,7 @@ class OrderDto {
     required this.guestGender,
     required this.therapistGender,
     required this.treatmentDetail,
+    required this.phoneNumber,
   });
 
   OrderDto copyWith({
@@ -28,6 +30,7 @@ class OrderDto {
     int? therapistId,
     String? guestGender,
     String? therapistGender,
+    String? phoneNumber,
     List<int>? treatmentDetail,
   }) {
     return OrderDto(
@@ -36,6 +39,7 @@ class OrderDto {
       cabangId: cabangId ?? this.cabangId,
       therapistId: therapistId ?? this.therapistId,
       guestGender: guestGender ?? this.guestGender,
+      phoneNumber: phoneNumber?? this.phoneNumber,
       therapistGender: therapistGender ?? this.therapistGender,
       treatmentDetail: treatmentDetail ?? this.treatmentDetail,
     );
@@ -47,6 +51,7 @@ class OrderDto {
         'orderDate': orderDate,
         'orderTime': orderTime,
         'cabangId': cabangId,
+        'phoneNumber': phoneNumber,
         'therapistId': therapistId,
         'guestGender': guestGender,
         'therapistGender': therapistGender,
@@ -56,6 +61,7 @@ class OrderDto {
     return <String, dynamic>{
       'orderDate': orderDate,
       'orderTime': orderTime,
+      'phoneNumber':phoneNumber,
       'cabangId': cabangId,
       'guestGender': guestGender,
       'therapistGender': therapistGender,
@@ -68,6 +74,7 @@ class OrderDto {
         orderDate: map['orderDate'] as String,
         orderTime: map['orderTime'] as String,
         cabangId: map['cabangId'] as int,
+        phoneNumber: map['phoneNumber'] as String,
         therapistId:
             map['therapistId'] != null ? map['therapistId'] as int : null,
         guestGender: map['guestGender'] as String,
@@ -84,7 +91,7 @@ class OrderDto {
 
   @override
   String toString() {
-    return 'OrderDto(orderDate: $orderDate, orderTime: $orderTime, cabangId: $cabangId, therapistId: $therapistId, guestGender: $guestGender, therapistGender: $therapistGender, treatmentDetail: $treatmentDetail)';
+    return 'OrderDto(orderDate: $orderDate, orderTime: $orderTime, cabangId: $cabangId, therapistId: $therapistId, guestGender: $guestGender, therapistGender: $therapistGender, treatmentDetail: $treatmentDetail, phoneNumber :$phoneNumber)';
   }
 
   @override
@@ -96,6 +103,7 @@ class OrderDto {
         other.orderTime == orderTime &&
         other.cabangId == cabangId &&
         other.therapistId == therapistId &&
+        other.phoneNumber == phoneNumber &&
         other.guestGender == guestGender &&
         other.therapistGender == therapistGender &&
         listEquals(other.treatmentDetail, treatmentDetail);
@@ -108,6 +116,7 @@ class OrderDto {
         cabangId.hashCode ^
         therapistId.hashCode ^
         guestGender.hashCode ^
+        phoneNumber.hashCode ^
         therapistGender.hashCode ^
         treatmentDetail.hashCode;
   }
