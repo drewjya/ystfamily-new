@@ -228,11 +228,17 @@ class EditProfileScreen extends HookConsumerWidget {
                     labelText: "No. Telp",
                   ),
                   validator: (value) {
-                    if (value != null && value.isNotEmpty) {
-                      return null;
-                    } else {
-                      return null;
+                    if (value == null || value.isEmpty) {
+                      return "No. Telp tidak valid";
                     }
+                    if (value.length < 10) {
+                      return "No. Telp tidak valid";
+                    }
+                    final regex = RegExp(r'^(\+62|62|0)8[1-9][0-9]{6,10}$');
+                    if (!regex.hasMatch(value)) {
+                      return "No. Telp tidak valid";
+                    }
+                    return null;
                   },
                 ),
                 const Gap(24),
