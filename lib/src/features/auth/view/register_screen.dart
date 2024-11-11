@@ -118,7 +118,7 @@ class RegisterScreen extends HookConsumerWidget {
                       if (value.length < 10) {
                         return "No. Telp tidak valid";
                       }
-                      final regex = RegExp(r'^(\+62|62|0)8[1-9][0-9]{6,9}$');
+                      final regex = RegExp(r'^(\+62|62|0)8[1-9][0-9]{6,10}$');
                       if (!regex.hasMatch(value)) {
                         return "No. Telp tidak valid";
                       }
